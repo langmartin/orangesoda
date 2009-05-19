@@ -25,13 +25,25 @@ function ht (spec, child) {
   }
 
   function wrap(spec, child) {
-    var tag = spec.match(/^[^#.\[]*/) || spec;
-    var id = spec.match(/#[^#.\[]*/);
-    var cls = spec.match(/\.[^#.\[]*/g);
-
+    var token = "[^#.:$\[]*";
+    var tag = spec.match(new RegExp("^" + token));
     var acc = "<" + tag;
-    if (id) acc += " id=\"" + id[0].substr(1) + "\"";
 
+    var simple = {
+      id: "#",
+      name: "$",
+      type: ":"
+    };
+
+    ht.each(simple, function (attr, ch) {
+              var val = spec.match(new RegExp(ch + token));
+              ht.debug(attr + " "+ ch + " " + val);
+              if (val) acc += " " + attr + "=\""
+                + val[0].substr(1)
+                + "\"";
+            });
+
+    var cls = spec.match(new RegExp("\." + token, "g"));
     var val = "";
     ht.each(cls, function (i, m) {
               var v = m.substr(1);
@@ -39,13 +51,15 @@ function ht (spec, child) {
             });
     if (val) acc += " class=\"" + val + "\"";
 
-    acc += parse_attr(spec);
+    acc += parse_attr(spec, new RegExp("," + token, "g"));
+    acc += parse_attr(spec, /\[[^\]]+]\]/g);
+
     acc += ">" + child + "</" + tag + ">\n";
     return acc;
   }
 
-  function parse_attr(spec) {
-    var attr = spec.match(/\[[^#.\[]*\]/g);
+  function parse_attr(spec, re) {
+    var attr = spec.match(re);
     var acc = "", aa = {};
     ht.each(attr, function (i, m) {
               var key = ht.lrchop(m.match(/[^=]*./)[0]);
@@ -113,6 +127,7 @@ ht.printf = function () {
               switch (ch) {
               case "%": acc += "%"; break;
               case "s": acc += str(); break;
+              case "R": acc += request(); break;
               }
               state = false;
             }
@@ -120,11 +135,20 @@ ht.printf = function () {
 
   return acc;
 
-  function str () {
+  function nextArg () {
     if (! args.length)
       throw {fn: "ht.printf",
              message: "too few arguments to substitute in template"};
-    return ht.escape(args.shift());
+    return args.shift();
+  }
+
+  function str () {
+    return ht.escape(nextArg());
+  }
+
+  function request() {
+    var key = nextArg();
+    return ht.escape(Request(key));
   }
 };
 
@@ -143,5 +167,9 @@ ht.escape = function (str) {
 };
 
 ht.debug = function (str) {
-  Response.Write("ht.debug: " + str + "<br>");
+  Response.Write("<!-- HT(debug): " + str + "-->\n");
+};
+
+ht.debug = function () {
+  return false;
 };
