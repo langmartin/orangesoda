@@ -2,20 +2,27 @@
 
 (defun next-token (proc str)
   (catch 'next-token-esc
-    (with-output-to-string
+    (with-temp-buffer
       (let ((len (length str))
             (idx 0))
-        (while (< len idx)
+        (while (< idx len)
           (let ((ch (aref str idx)))
             (if (funcall proc (aref str idx))
-                (throw 'next-token-esc (buffer-string))
+                (throw 'next-token-esc
+                       (buffer-substring-no-properties (point-min) (point-max)))
               (progn
-                (princ (aref str idx))
-                (setq len (+ 1 len))))))))))
+                (print (aref str idx))
+                (setq idx (+ 1 idx))))))
+        (buffer-substring-no-properties (point-min) (point-max))))))
 
-(next-token (lambda (ch)
-              (case ('(?a ?b) t)))
-            "sdfsasdfsb")
+
+(defun test (ch)
+  (if (or (= ch ?a) (= ch ?b))
+      (progn
+        (message "returning true")
+        t)))
+
+(next-token 'test "sdfsasdfsb")
 
 (setq ht-identifier-component-table
       `((?# . "id")
