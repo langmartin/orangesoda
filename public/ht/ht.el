@@ -52,11 +52,16 @@ the binding is true. Use and-let* instead."
   in sequences. As values are true, continue to bind and then
   execute the body. See scheme srfi-2."
   (declare (indent 1))
-  (if (= (length bindings) 1)
-      `(and-let1 ,(car bindings) ,@body)
+  (if (null bindings)
+      `(progn ,@body)
     `(and-let1 ,(car bindings)
        (and-let* ,(cdr bindings)
          ,@body))))
+
+(assert
+ (and
+  (= 3 (and-let* ((foo 1) (bar 2)) (+ foo bar)))
+  (null (and-let* ((foo nil) (error "shouldn't reach this line"))))))
 
 (defmacro define-record-type (identifier cons pred &rest slots)
   "Define an identifier and a bunch of procedures for accessing
@@ -64,8 +69,7 @@ slots of a vector marked with the identifier. See scheme srfi-9."
   (declare (indent 1))
   (let* ((slot-tags (mapcar 'car slots)))
     `(progn
-       (defvar ,identifier nil "define-record-type identifier")
-       (setq ,identifier (list ',identifier))
+       (defvar ,identifier (list ',identifier) "define-record-type identifier")
        (defun ,(car cons) (,@(cdr cons))
          (let ,(fold (lambda (tag acc)
                        (if (not (memq tag (cdr cons)))
