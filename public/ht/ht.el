@@ -42,10 +42,10 @@ the binding is true. Use and-let* instead."
   (declare (indent 1))
   (let ((sym (car binding))
         (exp (cdr binding)))
-    `(let ((,sym ,@exp))
-       (if ,sym
-           (progn
-             ,@body)))))
+    (if (null exp)
+        `(if ,sym (progn ,@body))
+      `(let ((,sym ,@exp))
+         (if ,sym (progn ,@body))))))
 
 (defmacro and-let* (bindings &rest body)
   "Bind variables like let*, but ensuring that each value is true
@@ -61,7 +61,11 @@ the binding is true. Use and-let* instead."
 (assert
  (and
   (= 3 (and-let* ((foo 1) (bar 2)) (+ foo bar)))
-  (null (and-let* ((foo nil) (error "shouldn't reach this line"))))))
+  (null (and-let* ((foo nil) (error "shouldn't reach this line"))))
+  (eq 'a (and-let* ((foo (memq 'a '(b c a d)))
+                    ((listp foo))
+                    (foo (car foo)))
+           foo))))
 
 (defmacro define-record-type (identifier cons pred &rest slots)
   "Define an identifier and a bunch of procedures for accessing
