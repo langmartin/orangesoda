@@ -5,14 +5,12 @@ function ht (spec, child) {
   } else {
     body = lp(spec);
   }
-
   return function () {
     if (arguments.length == 0) return body;
     var args = Array.prototype.slice.call(arguments);
     args.unshift(body);
     return ht.printf.apply(this, args);
   };
-
   function lp (args) {
     var spec = args.shift();
     var children = "";
@@ -21,64 +19,17 @@ function ht (spec, child) {
                 : (typeof child == "function") ? child()
                 : lp(child);
             });
-    return wrap(spec, children);
-  }
-
-  function wrap(spec, child) {
-    var token = "[^#.:$\[]*";
-    var tag = spec.match(new RegExp("^" + token));
-    var acc = "<" + tag;
-
-    var simple = {
-      id: "#",
-      name: "$",
-      type: ":"
-    };
-
-    ht.each(simple, function (attr, ch) {
-              var val = spec.match(new RegExp(ch + token));
-              ht.debug(attr + " "+ ch + " " + val);
-              if (val) acc += " " + attr + "=\""
-                + val[0].substr(1)
-                + "\"";
-            });
-
-    var cls = spec.match(new RegExp("\." + token, "g"));
-    var val = "";
-    ht.each(cls, function (i, m) {
-              var v = m.substr(1);
-              val += (val) ? " " + v : v;
-            });
-    if (val) acc += " class=\"" + val + "\"";
-
-    acc += parse_attr(spec, new RegExp("," + token, "g"));
-    acc += parse_attr(spec, /\[[^\]]+]\]/g);
-
-    acc += ">" + child + "</" + tag + ">\n";
-    return acc;
-  }
-
-  function parse_attr(spec, re) {
-    var attr = spec.match(re);
-    var acc = "", aa = {};
-    ht.each(attr, function (i, m) {
-              var key = ht.lrchop(m.match(/[^=]*./)[0]);
-              var val = ht.lrchop(m.match(/=.*$/)[0]);
-              aa[key] = (aa[key]) ? aa[key] + " " + val : val;
-            });
-
-    for (key in aa) {
-      acc += " " + key + "=\"" + aa[key] + "\"";
-    }
-    return acc;
+    return ht.parse(spec, children);
   }
 }
 
-ht.lrchop = function (str) {
-  if (! typeof str == "string") return null;
-  return str.substring(1, str.length - 1);
+ht.assert = function (section, thunks) {
+  var thunk;
+  for (var ii=1; ii<arguments.length; ii++) {
+    thunk = arguments[ii];
+    if (! (thunk())) throw thunk;
+  }
 };
-
 
 ht.extend = function (obj) {
   for (var ii=1; ii<arguments.length; ii++) {
@@ -93,63 +44,16 @@ ht.each = function (obj, fn, opts0) {
   var opts = {};
   ht.extend(opts, {start: 0, stop: obj.length}, opts0);
   var ii;
-
   if (typeof obj == "string")
     for (ii=opts.start; ii<opts.stop; ii++)
       fn(ii, obj.charAt(ii));
-
   else if (obj.length)
   for (ii=opts.start; ii<opts.stop; ii++)
     fn(ii, obj[ii]);
-
   else
     for (ii in obj)
       fn(ii, obj[ii]);
   return true;
-};
-
-ht.printf = function () {
-  var state = false;
-  var args = Array.prototype.slice.call(arguments);
-  var template = args.shift();
-  var acc = "";
-
-  ht.each(template, function (ii, ch) {
-            if (! state) {
-              if (ch == "%") {
-                state = "%";
-                return;
-              }
-              else acc += ch;
-            }
-
-            if (state) {
-              switch (ch) {
-              case "%": acc += "%"; break;
-              case "s": acc += str(); break;
-              case "R": acc += request(); break;
-              }
-              state = false;
-            }
-          });
-
-  return acc;
-
-  function nextArg () {
-    if (! args.length)
-      throw {fn: "ht.printf",
-             message: "too few arguments to substitute in template"};
-    return args.shift();
-  }
-
-  function str () {
-    return ht.escape(nextArg());
-  }
-
-  function request() {
-    var key = nextArg();
-    return ht.escape(Request(key));
-  }
 };
 
 ht.escape = function (str) {
@@ -166,6 +70,58 @@ ht.escape = function (str) {
   return acc;
 };
 
+ht.printf_symbols = {
+  "%": function (args) {
+    return "%";
+  },
+  "a": function (args) {
+    return escape(args.shift());
+  },
+  "s": function (args) {
+    return ht.escape(args.shift());
+  },
+  "d": function (args) {
+    return parseInt(args.shift());
+  },
+  "f": function (args) {
+    return parseFloat(args.shift());
+  }
+};
+
+ht.printf = function () {
+  var state = false;
+  var args = Array.prototype.slice.call(arguments);
+  var template = args.shift();
+  var acc = "";
+  ht.each(template, function (ii, ch) {
+            if (state) {
+              if (ht.printf_symbols[ch]) {
+                acc += ht.printf_symbols[ch](args); // mutates args!
+              }
+              state = false;
+            }
+            else {
+              if (ch == "%") {
+                state = "%";
+                return;
+              }
+              else acc += ch;
+            }
+          });
+  return acc;
+};
+
+ht.assert(
+  "printing",
+  function () {
+    return ht.printf("foo %s bar %a", "<b>", "an attr")
+      == "foo &lt;b&gt; bar an%20attr";
+  },
+  function () {
+    return ht.printf("") == "";
+  }
+);
+
 ht.debug = function (str) {
   Response.Write("<!-- HT(debug): " + str + "-->\n");
 };
@@ -173,3 +129,89 @@ ht.debug = function (str) {
 ht.debug = function () {
   return false;
 };
+
+//// This is a straight-forward state machine parser. The obvious
+//// symmetries could be knocked off, but I'll save that for later.
+//// I'm taking bets on when later happens.
+
+ht.symbols = {
+  "#": "id",
+  ".": "class",
+  "$": "name",
+  ":": "type",
+  "[": {attr: true}
+};
+
+ht.ugly_the_state_machine = function (str) {
+  var attr = {},
+  state = 0,
+  key = "tag",
+  acc = "";
+  ht.each(str, function (ii, ch) {
+            switch (state) {
+            case "esc":
+              acc += ch;
+              break;
+            case "key":
+              if (ch == "\\") state = "esc";
+              else {
+                if (ch == "=") {
+                  key = acc;
+                  acc = "";
+                  state = "val";
+                }
+                else acc += ch;
+              }
+              break;
+            case "val":
+              if (ch == "\\") state = "esc";
+              else {
+                if (ch == "]") {
+                  if (! attr[key]) attr[key] = [];
+                  attr[key].push(acc);
+                  acc = "";
+                  state = 0;
+                }
+                else acc += ch;
+              }
+              break;
+            default:
+              if (ch == "\\") state = "esc";
+              else {
+                if (ht.symbols[ch]) {
+                  if (! attr[key]) attr[key] = [];
+                  attr[key].push(acc);
+                  acc = "";
+                  key = ht.symbols[ch];
+                  if (key.attr) {
+                    state = "key";
+                  }
+                }
+                else acc += ch;
+              }
+              break;
+            }
+          }
+         );
+  return attr;
+};
+
+ht.parse = function (input, child) {
+  var acc = ht.ugly_the_state_machine(input);
+  var str = "<" + acc.tag;
+  ht.each(acc, function (key, val) {
+            if (! (key == "tag")) {
+              str += " " + key + "=\""
+                + val.join(" ") + "\"";
+            }
+          });
+  return str + ">" + child + "</" + acc.tag + ">\n";
+};
+
+ht.assert(
+  "parsing",
+  function () {
+    return ht(["div#foo$foo.bar.baz[href=http://foo.com/bar/baz]"])()
+      == '<div id="foo" name="foo" class="bar baz" href="http://foo.com/bar/baz"></div>\n';
+  }
+);
