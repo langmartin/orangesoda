@@ -43,10 +43,13 @@ ht.each = function (obj, fn, opts0) {
   if (! obj) return false;
   var opts = {};
   var ii, val;
+  var string = (typeof obj == "string") || false;
   ht.extend(opts, {start: 0, stop: obj.length, step: 1}, opts0);
   if (obj.length) {
-    for (ii=opts.start; ii<opts.stop; ii+=opts.step)
-      if (fn(ii, obj[ii]) === false) break;
+    for (ii=opts.start; ii<opts.stop; ii+=opts.step) {
+      val = (string) ? obj.charAt(ii) : obj[ii];
+      if (fn(ii, val) === false) break;
+    }
   }
   else {
     for (ii in obj)
@@ -65,22 +68,43 @@ ht.assert(
               return true;
             });
     return lst.length == 3;
+  },
+    function () {
+    var sum = 0;
+    ht.each([1, 2, 3], function (i,v) {
+              sum += v;
+            });
+    return sum == 6;
+  },
+  function () {
+    var sum = 0;
+    ht.each("123", function (i,v) {
+              sum += parseInt(v);
+            });
+    return sum == 6;
   }
 );
 
 ht.escape = function (str) {
-  var acc = "";
+  var acc = [];
   ht.each(str, function (ii, ch) {
             switch (ch) {
-            case "&": acc += "&amp;"; break;
-            case "<": acc += "&lt;"; break;
-            case ">": acc += "&gt;"; break;
-            case "\"": acc += "&quot;"; break;
-            default: acc += ch;
+            case "&": acc.push("&amp;"); break;
+            case "<": acc.push("&lt;"); break;
+            case ">": acc.push("&gt;"); break;
+            case "\"": acc.push("&quot;"); break;
+            default: acc.push(ch); break;
             }
           });
-  return acc;
+  return acc.join("");
 };
+
+ht.assert(
+  "escape",
+  function () {
+    return "foo &lt;b&gt;" == ht.escape("foo <b>");
+  }
+);
 
 ht.printf_symbols = {
   "%": function (args) {
@@ -113,10 +137,7 @@ ht.printf = function () {
               state = false;
             }
             else {
-              if (ch == "%") {
-                state = "%";
-                return;
-              }
+              if (ch == "%") state = true;
               else acc += ch;
             }
           });
