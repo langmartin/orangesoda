@@ -42,19 +42,31 @@ ht.extend = function (obj) {
 ht.each = function (obj, fn, opts0) {
   if (! obj) return false;
   var opts = {};
-  ht.extend(opts, {start: 0, stop: obj.length}, opts0);
-  var ii;
-  if (typeof obj == "string")
-    for (ii=opts.start; ii<opts.stop; ii++)
-      fn(ii, obj.charAt(ii));
-  else if (obj.length)
-  for (ii=opts.start; ii<opts.stop; ii++)
-    fn(ii, obj[ii]);
-  else
+  var ii, val;
+  ht.extend(opts, {start: 0, stop: obj.length, step: 1}, opts0);
+  if (obj.length) {
+    for (ii=opts.start; ii<opts.stop; ii+=opts.step)
+      if (fn(ii, obj[ii]) === false) break;
+  }
+  else {
     for (ii in obj)
-      fn(ii, obj[ii]);
+      if ((fn(ii, obj[ii])) === false) break;
+  }
   return true;
 };
+
+ht.assert(
+  "each",
+  function () {
+    var lst = [];
+    ht.each([1,2,3,4,5], function (ii,val) {
+              if (val == 4) return false;
+              lst.push(val);
+              return true;
+            });
+    return lst.length == 3;
+  }
+);
 
 ht.escape = function (str) {
   var acc = "";
@@ -123,10 +135,8 @@ ht.assert(
 );
 
 ht.debug = function (str) {
-  Response.Write("<!-- HT(debug): " + str + "-->\n");
-};
-
-ht.debug = function () {
+  // console.debug(str);
+  // Response.Write("<!-- HT(debug): " + str + "-->\n");
   return false;
 };
 
