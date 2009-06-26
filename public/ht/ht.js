@@ -12,7 +12,7 @@ function ht (spec, child) {
     return ht.printf.apply(this, args);
   };
   function lp (args) {
-    var spec = args.shift();
+    var spec = args && args.shift();
     var children = "";
     ht.each(args, function (i, child) {
               children += (typeof child == "string") ? child
@@ -23,20 +23,61 @@ function ht (spec, child) {
   }
 }
 
+ht.isobject = function (obj) {
+  return obj && (typeof obj == "object");
+};
+
+ht.isarray = function (obj) {
+  return obj && (typeof obj == "object") && obj.length;
+};
+
+/// these are handy for mapping keys or values
+
+ht.first = function (one) {
+  return one;
+};
+
+ht.second = function (one, two) {
+  return two;
+};
+
 ht.assert = function (section, thunks) {
   var thunk;
   for (var ii=1; ii<arguments.length; ii++) {
     thunk = arguments[ii];
-    if (! (thunk())) throw thunk;
+    if (! (thunk())) {
+      Response.Write(section);
+      throw thunk;
+    }
   }
 };
 
-ht.extend = function (obj) {
-  for (var ii=1; ii<arguments.length; ii++) {
-    for (var key in arguments[ii]) {
-      obj[key] = arguments[ii][key];
+ht.equal = function (obj0, obj1) {
+  var result = true;
+  ht.each(obj0, function (key, val) {
+            if (! (val == obj1[key]))
+              return result = false;
+            return true;
+          });
+  return result;
+};
+
+ht.push = function(arr, val0, val1) {
+  ht.each(arguments, function (ii, val) {
+            arr.push(val);
+          },
+          {start: 1});
+};
+
+ht.extend = function (obj0, obj1) {
+  var ii, obj, key;
+  for (ii=1; ii<arguments.length; ii++) {
+    obj = arguments[ii];
+    for (key in obj) {
+      obj0[key] = obj[key];
     }
   }
+  return obj;
 };
 
 ht.each = function (obj, fn, opts0) {
@@ -69,7 +110,7 @@ ht.assert(
             });
     return lst.length == 3;
   },
-    function () {
+  function () {
     var sum = 0;
     ht.each([1, 2, 3], function (i,v) {
               sum += v;
@@ -82,6 +123,26 @@ ht.assert(
               sum += parseInt(v);
             });
     return sum == 6;
+  }
+);
+
+ht.map = function (lst, proc) {
+  var acc = [];
+  ht.each(lst, function (k, v) {
+            acc.push(proc(k, v));
+          });
+  return acc;
+};
+
+ht.assert(
+  "map",
+  function () {
+    return ht.equal(
+      [1,2,3],
+      ht.map([3,4,5], function (k, v) {
+               return v - 2;
+             })
+    );
   }
 );
 
@@ -106,21 +167,58 @@ ht.assert(
   }
 );
 
+ht.jsonScalar = function (val) {
+  if (typeof val == "number") {
+    return val;
+  }
+  if (! (typeof val == "string")) val += "";
+  return '"'
+    + val.replace(/[\t\r\n]/g, "").replace(/\"/g, "\\\"")
+    + '"';
+};
+
+ht.json = function (obj) {
+  var first = true,
+  disp = ht.disp,
+  list = ht.isarray(obj);
+  disp((list) ? "[" : "{");
+  ht.each(
+    obj,
+    function (key, val) {
+      if (first) first = false;
+      else disp(",");
+      if (! list) {
+        disp(ht.jsonScalar(key), ":");
+      }
+      if (ht.isobject(val)) ht.json(val);
+      else disp(ht.jsonScalar(val));
+    }
+  );
+  disp((list) ? "]" : "}");
+};
+
 ht.printf_symbols = {
   "%": function (args) {
     return "%";
   },
-  "a": function (args) {
-    return escape(args.shift());
+  "!": function (args) {
+    return args.shift()();
   },
-  "s": function (args) {
-    return ht.escape(args.shift());
+  "c": function (args) {
+    return (args.shift()) ? "checked"
+      : "unchecked";
   },
   "d": function (args) {
     return parseInt(args.shift());
   },
   "f": function (args) {
     return parseFloat(args.shift());
+  },
+  "s": function (args) {
+    return ht.escape(args.shift());
+  },
+  "u": function (args) {
+    return escape(args.shift());
   }
 };
 
@@ -147,8 +245,8 @@ ht.printf = function () {
 ht.assert(
   "printing",
   function () {
-    return ht.printf("foo %s bar %a", "<b>", "an attr")
-      == "foo &lt;b&gt; bar an%20attr";
+    return ht.printf("foo %s bar", "<b>")
+      == "foo &lt;b&gt; bar";
   },
   function () {
     return ht.printf("") == "";
@@ -156,20 +254,17 @@ ht.assert(
 );
 
 ht.debug = function (str) {
-  // console.debug(str);
-  // Response.Write("<!-- HT(debug): " + str + "-->\n");
   return false;
 };
 
-//// This is a straight-forward state machine parser. The obvious
-//// symmetries could be knocked off, but I'll save that for later.
-//// I'm taking bets on when later happens.
+//// This is a state machine parser.
 
 ht.symbols = {
   "#": "id",
   ".": "class",
   "$": "name",
   ":": "type",
+  "=": "value",
   "[": {attr: true}
 };
 
@@ -178,71 +273,114 @@ ht.ugly_the_state_machine = function (str) {
   state = 0,
   key = "tag",
   acc = "";
+  function append (key, acc) {
+    if (acc) {
+      if (! attr[key]) attr[key] = [];
+      attr[key].push(acc);
+    }
+  }
+  function collect (ch, body) {
+    if (ch == "\\") state = "esc";
+    else {
+      if (body()) acc += ch;
+      else acc = "";
+    }
+  }
   ht.each(str, function (ii, ch) {
             switch (state) {
             case "esc":
               acc += ch;
               break;
             case "key":
-              if (ch == "\\") state = "esc";
-              else {
-                if (ch == "=") {
-                  key = acc;
-                  acc = "";
-                  state = "val";
-                }
-                else acc += ch;
-              }
+              collect(ch, function () {
+                        if (ch == "=") {
+                          key = acc;
+                          state = "val";
+                          return false;
+                        }
+                        return true;
+                      });
               break;
             case "val":
-              if (ch == "\\") state = "esc";
-              else {
-                if (ch == "]") {
-                  if (! attr[key]) attr[key] = [];
-                  attr[key].push(acc);
-                  acc = "";
-                  state = 0;
-                }
-                else acc += ch;
-              }
+              collect(ch, function () {
+                        if (ch == "]") {
+                          append(key, acc);
+                          state = 0;
+                          return false;
+                        }
+                        return true;
+                      });
               break;
             default:
-              if (ch == "\\") state = "esc";
-              else {
-                if (ht.symbols[ch]) {
-                  if (! attr[key]) attr[key] = [];
-                  attr[key].push(acc);
-                  acc = "";
-                  key = ht.symbols[ch];
-                  if (key.attr) {
-                    state = "key";
-                  }
-                }
-                else acc += ch;
-              }
+              collect(ch, function () {
+                        if (ht.symbols[ch]) {
+                          append(key, acc);
+                          key = ht.symbols[ch];
+                          if (key.attr) {
+                            state = "key";
+                          }
+                          return false;
+                        }
+                        return true;
+                      });
               break;
             }
           }
          );
+  append(key, acc);
   return attr;
 };
 
 ht.parse = function (input, child) {
-  var acc = ht.ugly_the_state_machine(input);
-  var str = "<" + acc.tag;
-  ht.each(acc, function (key, val) {
+  return ht.parse.parse(
+    ht.ugly_the_state_machine(input),
+    child
+  );
+};
+
+ht.self_closing_tags = {
+  br: true,
+  input: true,
+  img: true
+};
+
+ht.parse.parse = function (parsed, child) {
+  var tag = parsed.tag;
+  var acc = ["<", tag];
+  ht.each(parsed, function (key, val) {
             if (! (key == "tag")) {
-              str += " " + key + "=\""
-                + val.join(" ") + "\"";
+              ht.push(acc, " ", key, '="', val.join(" "), '"');
             }
           });
-  return str + ">" + child + "</" + acc.tag + ">\n";
+  ht.push(acc, ">", child);
+  if (! ht.self_closing_tags[tag])
+    ht.push(acc, "</", tag, ">");
+  return acc.join("");
 };
+
+ht.assert(
+  "parse concatenation",
+  function () {
+    return '<a at="1 2">bar</a>'
+      == ht.parse.parse({tag:"a",at:[1,2]}, "bar");
+  }
+);
 
 ht.assert(
   "parsing",
   function () {
+    var h = ht(["div"])(), d = "<div></div>";
+    return h == d;
+  },
+  function () {
+    return ht(["div.foo"])() == "<div class=\"foo\"></div>";
+  },
+  function () {
     return ht(["div#foo$foo.bar.baz[href=http://foo.com/bar/baz]"])()
-      == '<div id="foo" name="foo" class="bar baz" href="http://foo.com/bar/baz"></div>\n';
+      == '<div id="foo" name="foo" class="bar baz" href="http://foo.com/bar/baz"></div>';
+  },
+  function () {
+    return ht(["div.%s"])("foo")
+      == "<div class=\"foo\"></div>";
   }
 );
