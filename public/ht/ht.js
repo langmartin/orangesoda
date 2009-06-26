@@ -1,27 +1,99 @@
-function ht (spec, child) {
-  var body;
-  if (typeof child == "string") {
-    body = lp([spec, child]);
-  } else {
-    body = lp(spec);
-  }
-  return function () {
-    if (arguments.length == 0) return body;
-    var args = Array.prototype.slice.call(arguments);
-    args.unshift(body);
-    return ht.printf.apply(this, args);
+//// Sample output functions.
+
+function ASPoutM (obj0, obj1) {
+  ht.each(arguments, function (k, v) {
+            Response.Write(v);
+          });
+  return aspoutM;
+};
+
+function ArrayoutM (obj0, obj1) {
+  var lp, acc = Array.prototype.slice.call(arguments);
+  return lp = function (obj0, obj1) {
+    ht.each(arguments, acc.push);
+    return lp;
   };
-  function lp (args) {
-    var spec = args && args.shift();
-    var children = "";
-    ht.each(args, function (i, child) {
-              children += (typeof child == "string") ? child
-                : (typeof child == "function") ? child()
-                : lp(child);
-            });
-    return ht.parse(spec, children);
-  }
-}
+};
+
+function ArrayoutM (obj0, obj1) {
+  var lp, acc = Array.prototype.slice.call(arguments);
+  return lp = function (obj0, obj1) {
+    ht.each(arguments, acc.push);
+    return lp;
+  };
+};
+
+function stringoutM (obj0, obj1) {
+  var lp, acc = arguments.join("");
+  return lp = function (obj0, obj1) {
+    acc += arguments.join("");
+    return lp;
+  };
+};
+
+
+//// HT parser
+
+var ht;
+ht = function (specs) {
+  var self = ht.descend(specs);
+  return function (outM, arg0, arg1) {
+    var lp, args = Array.prototype.slice.call(arguments);
+    ht.each(
+      self,
+      lp = function (key, val) {
+        if (ht.isparsed(val))
+          ht.displaywith(outM, val);
+        else {
+          if (ht.isobject)
+            lp(val);
+          else outM(val);
+        }
+      }
+    );
+  };
+};
+
+ht.descend = function (spec, child0, child1) {
+  if (isarray(spec)) return ht.apply(this, spec);
+  var parsed,
+  self = ht.ugly_the_state_machine(spec);
+  self.children = ht.map1(
+    arguments,
+    function (val) {
+      if (isobject(val))
+        return ht.apply(this, val);
+      parsed = ht.ugly_the_state_machine(val);
+      if (parsed.length == 1)
+        return parsed.tag;
+      return parsed;
+    }
+  );
+  return self;
+};
+
+ht.self_closing_tags = {
+  br: true,
+  input: true,
+  img: true
+};
+
+ht.displaywith = function (outM, parsed) {
+  var tag = parsed.tag,
+  skip = {tag:true, children:true};
+  outM = outM("<", tag);
+  ht.each(parsed, function (key, val) {
+            if (skip[key]) return;
+            outM = outM(" ", key, '="', val, '"');
+          });
+  outM = outM(">");
+  ht.each(parsed.children, function (child) {
+            outM = ht.displaywith(outM, child);
+          });
+  if (! ht.self_closing_tags[tag])
+    outM = outM("</", tag, ">");
+  return outM;
+};
 
 ht.isobject = function (obj) {
   return obj && (typeof obj == "object");
@@ -126,11 +198,17 @@ ht.assert(
   }
 );
 
-ht.map = function (lst, proc) {
+ht.each1 = function (lst, proc) {
+  ht.each(lst, proc, {start:1});
+};
+
+ht.map = function (lst, proc, opts) {
   var acc = [];
-  ht.each(lst, function (k, v) {
+  ht.each(lst,
+          function (k, v) {
             acc.push(proc(k, v));
-          });
+          },
+          opts);
   return acc;
 };
 
@@ -145,6 +223,10 @@ ht.assert(
     );
   }
 );
+
+ht.map1 = function (lst, proc) {
+  return ht.map(lst, proc, {start:1});
+};
 
 ht.escape = function (str) {
   var acc = [];
@@ -205,8 +287,11 @@ ht.printf_symbols = {
     return args.shift()();
   },
   "c": function (args) {
-    return (args.shift()) ? "checked"
-      : "unchecked";
+    var val = args.shift();
+    if ((! val) || (val == "false")) val = "";
+    else val = "checked";
+    Response.Write("debug %c: " + val + "<br>");
+    return val;
   },
   "d": function (args) {
     return parseInt(args.shift());
@@ -338,25 +423,6 @@ ht.parse = function (input, child) {
   );
 };
 
-ht.self_closing_tags = {
-  br: true,
-  input: true,
-  img: true
-};
-
-ht.parse.parse = function (parsed, child) {
-  var tag = parsed.tag;
-  var acc = ["<", tag];
-  ht.each(parsed, function (key, val) {
-            if (! (key == "tag")) {
-              ht.push(acc, " ", key, '="', val.join(" "), '"');
-            }
-          });
-  ht.push(acc, ">", child);
-  if (! ht.self_closing_tags[tag])
-    ht.push(acc, "</", tag, ">");
-  return acc.join("");
-};
 
 ht.assert(
   "parse concatenation",
