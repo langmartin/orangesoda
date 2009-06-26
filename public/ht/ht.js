@@ -250,10 +250,13 @@ ht.assert(
 );
 
 ht.jsonScalar = function (val) {
-  if (typeof val == "number") {
-    return val;
-  }
-  if (! (typeof val == "string")) val += "";
+  if (val === undefined) return undefined;
+  var type = typeof val;
+  if (type == "object") throw "jsonScalar only handles scalar values";
+  if (type == "number") return val;
+  if (type == "boolean" && val) return "true";
+  if (type == "boolean") return "false";
+  if (! (type == "string")) val += "";
   return '"'
     + val.replace(/[\t\r\n]/g, "").replace(/\"/g, "\\\"")
     + '"';
