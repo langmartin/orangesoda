@@ -1,53 +1,39 @@
 //// Sample output functions.
 
-function ASPoutM (obj0, obj1) {
+function dispASP (obj0, obj1) {
   ht.each(arguments, function (k, v) {
             Response.Write(v);
           });
-  return aspoutM;
+  return dispASP;
 };
 
-function ArrayoutM (obj0, obj1) {
+function dispArray (obj0, obj1) {
   var lp, acc = Array.prototype.slice.call(arguments);
   return lp = function (obj0, obj1) {
-    ht.each(arguments, acc.push);
-    return lp;
+    if (arguments.length == 0) return acc;
+    else {
+      ht.each(arguments, acc.push);
+      return lp;
+    }
   };
 };
-
-function ArrayoutM (obj0, obj1) {
-  var lp, acc = Array.prototype.slice.call(arguments);
-  return lp = function (obj0, obj1) {
-    ht.each(arguments, acc.push);
-    return lp;
-  };
-};
-
-function stringoutM (obj0, obj1) {
-  var lp, acc = arguments.join("");
-  return lp = function (obj0, obj1) {
-    acc += arguments.join("");
-    return lp;
-  };
-};
-
 
 //// HT parser
 
-var ht;
-ht = function (specs) {
+function ht (specs) {
   var self = ht.descend(specs);
   return function (outM, arg0, arg1) {
     var lp, args = Array.prototype.slice.call(arguments);
     ht.each(
       self,
       lp = function (key, val) {
+        console.debug("lp", key);
         if (ht.isparsed(val))
-          ht.displaywith(outM, val);
+          outM = ht.displaywith(outM, val);
         else {
           if (ht.isobject)
             lp(val);
-          else outM(val);
+          else outM = outM(val);
         }
       }
     );
@@ -55,22 +41,24 @@ ht = function (specs) {
 };
 
 ht.descend = function (spec, child0, child1) {
-  if (isarray(spec)) return ht.apply(this, spec);
+  if (ht.isarray(spec)) return ht.apply(this, spec);
   var parsed,
   self = ht.ugly_the_state_machine(spec);
   self.children = ht.map1(
     arguments,
-    function (val) {
-      if (isobject(val))
-        return ht.apply(this, val);
+    function (key, val) {
+      console.debug(val);
+      if (ht.isobject(val))
+        return ht.descend.apply(this, val);
       parsed = ht.ugly_the_state_machine(val);
-      if (parsed.length == 1)
-        return parsed.tag;
+      if (! parsed.tag) return parsed.text;
       return parsed;
     }
   );
   return self;
 };
+
+ht.descend("div#foo.bar", "foo").children[0].length;
 
 ht.self_closing_tags = {
   br: true,
@@ -96,11 +84,19 @@ ht.displaywith = function (outM, parsed) {
 };
 
 ht.isobject = function (obj) {
-  return obj && (typeof obj == "object");
+  return (typeof obj == "object");
 };
 
 ht.isarray = function (obj) {
-  return obj && (typeof obj == "object") && obj.length;
+  return (typeof obj == "object") && obj.length;
+};
+
+ht.isdefined = function (obj) {
+  return (! (obj === undefined));
+};
+
+ht.isparsed = function (obj) {
+  return ((! (obj === undefined)) && obj.tag) || false;
 };
 
 /// these are handy for mapping keys or values
@@ -289,13 +285,6 @@ ht.printf_symbols = {
   "!": function (args) {
     return args.shift()();
   },
-  "c": function (args) {
-    var val = args.shift();
-    if ((! val) || (val == "false")) val = "";
-    else val = "checked";
-    Response.Write("debug %c: " + val + "<br>");
-    return val;
-  },
   "d": function (args) {
     return parseInt(args.shift());
   },
@@ -305,7 +294,7 @@ ht.printf_symbols = {
   "s": function (args) {
     return ht.escape(args.shift());
   },
-  "u": function (args) {
+  "U": function (args) {
     return escape(args.shift());
   }
 };
@@ -340,10 +329,6 @@ ht.assert(
     return ht.printf("") == "";
   }
 );
-
-ht.debug = function (str) {
-  return false;
-};
 
 //// This is a state machine parser.
 
@@ -419,37 +404,34 @@ ht.ugly_the_state_machine = function (str) {
   return attr;
 };
 
-ht.parse = function (input, child) {
-  return ht.parse.parse(
-    ht.ugly_the_state_machine(input),
-    child
-  );
-};
+// ht.assert(
+//   "parse concatenation",
+//   function () {
+//     return '<a at="1 2">bar</a>'
+//       == ht.parse.parse({tag:"a",at:[1,2]}, "bar");
+//   }
+// );
 
-
-ht.assert(
-  "parse concatenation",
-  function () {
-    return '<a at="1 2">bar</a>'
-      == ht.parse.parse({tag:"a",at:[1,2]}, "bar");
-  }
-);
-
-ht.assert(
-  "parsing",
-  function () {
-    var h = ht(["div"])(), d = "<div></div>";
-    return h == d;
-  },
-  function () {
-    return ht(["div.foo"])() == "<div class=\"foo\"></div>";
-  },
-  function () {
-    return ht(["div#foo$foo.bar.baz[href=http://foo.com/bar/baz]"])()
-      == '<div id="foo" name="foo" class="bar baz" href="http://foo.com/bar/baz"></div>';
-  },
-  function () {
-    return ht(["div.%s"])("foo")
-      == "<div class=\"foo\"></div>";
-  }
-);
+(function () {
+   function go(tag) {
+     return ht(tag)(dispArray)().join('');
+   }
+   ht.assert(
+     "parsing",
+     function () {
+       var h = ht(["div"])(dispArray)().join(""), d = "<div></div>";
+       return h == d;
+     },
+     function () {
+       return ht(["div.foo"])() == "<div class=\"foo\"></div>";
+     },
+     function () {
+       return ht(["div#foo$foo.bar.baz[href=http://foo.com/bar/baz]"])()
+         == '<div id="foo" name="foo" class="bar baz" href="http://foo.com/bar/baz"></div>';
+     },
+     function () {
+       return ht(["div.%s"])("foo")
+         == "<div class=\"foo\"></div>";
+     }
+   );
+ })();
