@@ -1,3 +1,7 @@
+* "Javascript is cool, but" Or "What did you do with my macros?!?"
+  Ahem.
+  : var args = Array.prototype.slice.call(arguments);
+
 * HT templates for Javascript, Emacs Lisp, and Scheme (Python coming soon)
 ** Motivation
 *** Templates are safe, not just convenient
