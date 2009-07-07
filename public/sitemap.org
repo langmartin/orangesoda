@@ -1,0 +1,5 @@
+#+TITLE: Index for project orgfiles
+
+   + ..
+     + [[file:../index.org][index]]
+     + [[file:../sitemap.org][Index for project orgfiles]]

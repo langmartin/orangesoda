@@ -1,9 +1,9 @@
 * HT templates for Javascript, Emacs Lisp, and Scheme (Python coming soon)
-** Templates are safe, not just convenient
-** CSS selectors are compact and standard (props to HAML)
-*** Native lists; bringing unhygienic macros to everyone
-*** Hygiene would be a cool project
-** printf-style replacements give dynamic languages limited typing
+** Motivation
+*** Templates are safe, not just convenient
+*** CSS selectors are compact and standard (props to HAML)
+*** printf-style replacements give dynamic languages limited typing
+*** Native lists; bringing unhygienic macros to the masses
 ** Examples
 #+BEGIN_SRC js2
 ht(["html",
@@ -26,9 +26,18 @@ ht('("html",
 #+END_SRC
 
 ** Sources
-   - Javascript (also ASP Jscript): [[./ht/ht.js]]
-   - Emacs Lisp: [[ht/ht.el]]
-   - Scheme: [[ht/ht.scm]]
+   :PROPERTIES:
+   :ORDERED:  1
+   :END:
+
+*** TODO Emacs Lisp: [[ht/ht.el]]
+*** TODO Javascript (also ASP Jscript): [[./ht/ht.js]]
+    The javascript version should work, but it's limited and written
+    weirdly. This was the first implementation, it uses regular
+    expressions for parsing and is inflexible. A new version will
+    follow when I've got the elisp parser right.
+
+*** TODO Scheme: [[ht/ht.scm]]
 
 
 * Wibler.com
