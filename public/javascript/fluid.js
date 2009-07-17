@@ -20,18 +20,21 @@ fluid.prototype = {
 
 (function () {
    var foo = new fluid();
-   ht.assert(
-     "fluid",
+   assert(
      function () {
        var result;
        foo.val(1);
        result = (foo.val() == 1);
        foo.let(2, function () {
-                 // Response.Write(foo.val());
                  result = result && (foo.val() == 2);
-               }
-              );
+               });
        return result;
      }
    );
+
+   function assert (thunk0, thunk1) {
+     for (var ii=0; ii<arguments.length; ii++) {
+       if (! arguments[ii]()) throw arguments[ii];
+     }
+   }
  }());

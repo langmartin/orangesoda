@@ -1,8 +1,34 @@
 * Javascript
+** Fluid Variables (aka Dynamic Scoping, aka Parameters)
+   Fluid bindings are dynamically scoped; they follow the flow of
+   control through the program. See wikipedia on [[http://en.wikipedia.org/wiki/Scope_%28programming%29#Dynamic_scoping][Scoping]]. In standard
+   javascript, fluid binding is easy to implement; javascript's model
+   of control is very simple. Without threads or continuations,
+   exception handling is the only concern.
+
+   The code: [[./javascript/fluid.js][fluid.js]].
+
 ** Classic ASP
    I'm currently working in classic ASP, which supports javascript as
    server-side language. I'd like to get John Resig's [[http://ejohn.org/blog/bringing-the-browser-to-the-server/][env.js]] working
    in ASP if we continue to use this platform.
+
+*** Order of script evalution
+    Classic ASP supports a few different language platforms, although
+    it seems rare to see anything other than VBScript and JScript. The
+    order of evaluation is:
+
+    0. The language tag.
+    1. =<script>= tags in the non-default language.
+    2. =<script>= tags in the default language.
+    3. Static HTML and =<% %>= blocks in order.
+
+    I've had good success programming in JScript by leaving the
+    default language alone and preparing thunks that produce output. I
+    can call those thunks in the page as =<% foo_thunk %>=.
+
+    It is wise to avoid this whole mess, of course, and to structure
+    projects around a model that supports templates.
 
 * =ht= templates for HTML
   for Javascript, Emacs Lisp, and Scheme (Python coming soon)
