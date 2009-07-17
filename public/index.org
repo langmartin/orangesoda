@@ -1,13 +1,17 @@
-* "Javascript is cool, but" Or "What did you do with my macros?!?"
-  Ahem.
-  : var args = Array.prototype.slice.call(arguments);
+* Javascript
+** Classic ASP
+   I'm currently working in classic ASP, which supports javascript as
+   server-side language. I'd like to get John Resig's [[http://ejohn.org/blog/bringing-the-browser-to-the-server/][env.js]] working
+   in ASP if we continue to use this platform.
 
-* HT templates for Javascript, Emacs Lisp, and Scheme (Python coming soon)
+* =ht= templates for HTML
+  for Javascript, Emacs Lisp, and Scheme (Python coming soon)
+
 ** Motivation
-*** Templates are safe, not just convenient
-*** CSS selectors are compact and standard (props to HAML)
-*** printf-style replacements give dynamic languages limited typing
-*** Native lists; bringing unhygienic macros to the masses
+*** Templates are safe.
+*** CSS selectors are compact and standard (see HAML).
+*** printf-style replacements help control types.
+*** Native lists facilitate writing code to produce =ht= arguments.
 ** Examples
 #+BEGIN_SRC js2
 ht(["html",
@@ -19,30 +23,42 @@ ht(["html",
       ["p#text", "%s"]]]]);
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-ht('("html",
-     ("head",
-      ("title", "template test")),
-     ("body",
-      ("div#container",
-       ("h1#head", "a title"),
-       ("p#text", "%s")))))
-#+END_SRC
-
 ** Sources
    :PROPERTIES:
    :ORDERED:  1
    :END:
 
+*** DONE Javascript (also ASP Jscript): [[./ht/ht.js]]
+    CLOSED: [2009-07-17 Fri 09:42]
+
+    The javascript is the proof of concept, and it works. A larger
+    part than I anticipated consists of utilities that are in the
+    style of jQuery. Using ht server-side, I wanted jQuery
+    manipulations pretty frequently, so perhaps the ht format works
+    best as jQuery extension.
+
+    The jury is out.
+
 *** TODO Emacs Lisp: [[ht/ht.el]]
-*** TODO Javascript (also ASP Jscript): [[./ht/ht.js]]
-    The javascript version should work, but it's limited and written
-    weirdly. This was the first implementation, it uses regular
-    expressions for parsing and is inflexible. A new version will
-    follow when I've got the elisp parser right.
+    So far, the emacs lisp implementation of ht has yeilded some small
+    utilities of convenience.
 
-*** TODO Scheme: [[ht/ht.scm]]
+**** SRFI-2 =and-let*=
+     =and-let*= is a combination of =and= and =let=, which binds the
+     result of each form while also testing it for truth.
 
+#+BEGIN_SRC emacs-lisp
+(and-let* ((val (member 'foo '(a b c foo d e)))
+           (val (cdr val)))
+  val)
+#+END_SRC
+
+  If ='foo= was not found in member, the form would return false
+  rather than raising an error.
+
+  The SRFIs (Scheme Request For Implementation) are a collection of
+  well-conceived libraries, so I like to imitate them in other
+  contexts.
 
 * Wibler.com
   Wibler is hosted almost entirely at Google:
