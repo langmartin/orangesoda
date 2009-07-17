@@ -1,3 +1,23 @@
+* Emacs Lisp
+** SRFI-2 =and-let*=
+   <<SRFI-2.el>>
+
+   =and-let*= is a combination of =and= and =let=, which binds the
+   result of each form while also testing it for truth.
+
+#+BEGIN_SRC emacs-lisp
+(and-let* ((val (member 'foo '(a b c foo d e)))
+           (val (cdr val)))
+  val)
+#+END_SRC
+
+   If ='foo= was not found in member, the form would return false
+   rather than raising an error.
+
+   The SRFIs (Scheme Request For Implementation) are a collection of
+   well-conceived libraries, so I like to imitate them in other
+   contexts.
+
 * Javascript
 ** Fluid Variables (aka Dynamic Scoping, aka Parameters)
    Fluid bindings are dynamically scoped; they follow the flow of
@@ -55,7 +75,7 @@ ht(["html",
    :END:
 
 *** DONE Javascript (also ASP Jscript): [[./ht/ht.js]]
-    CLOSED: [2009-07-17 Fri 09:42]
+    CLOSED: [2009-07-02 Thu 09:42]
 
     The javascript is the proof of concept, and it works. A larger
     part than I anticipated consists of utilities that are in the
@@ -67,24 +87,7 @@ ht(["html",
 
 *** TODO Emacs Lisp: [[ht/ht.el]]
     So far, the emacs lisp implementation of ht has yeilded some small
-    utilities of convenience.
-
-**** SRFI-2 =and-let*=
-     =and-let*= is a combination of =and= and =let=, which binds the
-     result of each form while also testing it for truth.
-
-#+BEGIN_SRC emacs-lisp
-(and-let* ((val (member 'foo '(a b c foo d e)))
-           (val (cdr val)))
-  val)
-#+END_SRC
-
-  If ='foo= was not found in member, the form would return false
-  rather than raising an error.
-
-  The SRFIs (Scheme Request For Implementation) are a collection of
-  well-conceived libraries, so I like to imitate them in other
-  contexts.
+    utilities of convenience. See [[SRFI-2.el]].
 
 * Wibler.com
   Wibler is hosted almost entirely at Google:
