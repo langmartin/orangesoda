@@ -9,7 +9,7 @@
 
 #+BEGIN_SRC emacs-lisp
 (and-let* ((val (member 'foo '(a b c foo d e)))
-           (val (cdr val)))
+           (val (car val)))
   val)
 #+END_SRC
 
