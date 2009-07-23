@@ -1,4 +1,4 @@
-#+TITLE: Projects
+#+TITLE: orangesoda.net
 
 * Emacs Lisp
 ** SRFI-2 =and-let*=
@@ -96,7 +96,7 @@ ht(["html",
     utilities of convenience. See [[SRFI-2.el]].
 
 * Scheme
-** A =REQUIRE= special form for Gambit-C.
+** A =REQUIRE= special form for Gambit-C
 Posted by [[Ben]] on <2009-07-22 Wed>.
 
 The =REQUIRE= special form includes libraries only once.  It is
