@@ -1,5 +1,5 @@
 #+TITLE: Index for project orgfiles
 
    + ..
-     + [[file:../index.org][index]]
+     + [[file:../index.org][orangesoda.net]]
      + [[file:../sitemap.org][Index for project orgfiles]]

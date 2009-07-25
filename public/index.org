@@ -1,3 +1,5 @@
+#+TITLE: orangesoda.net
+
 * Emacs Lisp
 ** SRFI-2 =and-let*=
    <<SRFI-2.el>> by [[Lang]]. <2009-07-17 Fri>
@@ -13,7 +15,7 @@
   val)
 #+END_SRC
 
-   If ='foo= was not found in member, the form would return false
+   If =foo= was not found in member, the form would return false
    rather than raising an error.
 
 * Javascript
@@ -57,10 +59,12 @@
   for Javascript, Emacs Lisp, and Scheme (Python coming soon)
 
 ** Motivation
-*** Templates are safe.
-*** CSS selectors are compact and standard (see HAML).
-*** printf-style replacements help control types.
-*** Native lists facilitate writing code to produce =ht= arguments.
+
+- Templates are safe.
+- CSS selectors are compact and standard (see HAML).
+- printf-style replacements help control types.
+- Native lists facilitate writing code to produce =ht= arguments.
+
 ** Examples
 #+BEGIN_SRC js2
 ht(["html",
@@ -78,7 +82,6 @@ ht(["html",
    :END:
 
 *** DONE Javascript (also ASP Jscript): [[./ht/ht.js]]
-    CLOSED: [2009-07-02 Thu 09:42]
 
     The javascript is the proof of concept, and it works. A larger
     part than I anticipated consists of utilities that are in the
@@ -92,10 +95,42 @@ ht(["html",
     So far, the emacs lisp implementation of ht has yeilded some small
     utilities of convenience. See [[SRFI-2.el]].
 
+* Scheme
+** A =REQUIRE= special form for Gambit-C
+Posted by [[Ben]] on <2009-07-22 Wed>.
+
+The =REQUIRE= special form includes libraries only once.  It is
+implemented using [[http://www.iro.umontreal.ca/~gambit/][Gambit-C]]'s =INCLUDE= and =LOAD= forms with
+=COND-EXPAND= to prevent a library from being loaded again (which is
+an error) or re-evaluated.
+
+=REQUIRE= accepts a sequence of requirement specifications that
+identify libraries.  The specifications are mapped onto the filesystem
+to find the corresponding source files or compiled modules.  For
+example:
+
+#+BEGIN_SRC scheme
+(require (srfi 1)
+         (lib util))
+
+;; Library code here...
+#+END_SRC
+
+See [[./scheme/require%23.scm][require#.scm]] for additional documentation.  An easy way to
+integrate =REQUIRE= into a project is to include [[./scheme/require%23.scm][require#.scm]] from
+`.gambcini' or `~/.gambcini'.  For more details, see [[http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html#Customization-1][Customization]] in
+the Gambit-C documentation.
+
+Source: [[./scheme/require%23.scm][require#.scm]] [[./scheme/_require.scm][_require.scm]]
+
 * Contributers
 ** <<Ben>> Weaver
-** <<Lang>> Martin
 
+   [[http://benweaver.com/][Ben]] lives in Chattanooga TN and works at [[http://thisismedium.com/][Medium]].  You can follow
+   him on [[http://twitter.com/bwvr][Twitter]], see code on [[http://github.com/weaver][github]], or send an email to
+   [his-first-name] at orangesoda.net.
+
+** <<Lang>> Martin
 * Wibler.com
   Wibler email & apps are hosted by Google:
   - [[http://mail.google.com/a/wibler.com/][email]]
