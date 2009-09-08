@@ -1,6 +1,10 @@
-//// jquery.dataset v0.1.0 -- HTML5 dataset jQuery plugin
-//// http://orangesoda.net/jquery.dataset.html
-///
+/// jquery.dataset v0.1.0 -- HTML5 dataset jQuery plugin
+/// http://orangesoda.net/jquery.dataset.html
+
+/// Copyright (c) 2009, Ben Weaver.  All rights reserved.
+/// This software is issued "as is" under a BSD license
+/// <http://orangesoda.net/license.html>.  All warrenties disclaimed.
+
 ///  The HTML5 specification allows elements to have custom data
 ///  attributes that are prefixed with `data-'.  They may be
 ///  conveniently accessed through an element's `dataset' property.
