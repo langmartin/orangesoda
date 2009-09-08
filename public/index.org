@@ -116,12 +116,12 @@ example:
 ;; Library code here...
 #+END_SRC
 
-See [[./scheme/require%23.scm][require#.scm]] for additional documentation.  An easy way to
-integrate =REQUIRE= into a project is to include [[./scheme/require%23.scm][require#.scm]] from
+See [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][require#.scm]] for additional documentation.  An easy way to
+integrate =REQUIRE= into a project is to include [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][require#.scm]] from
 `.gambcini' or `~/.gambcini'.  For more details, see [[http://www.iro.umontreal.ca/~gambit/doc/gambit-c.html#Customization-1][Customization]] in
 the Gambit-C documentation.
 
-Source: [[./scheme/require%23.scm][require#.scm]] [[./scheme/_require.scm][_require.scm]]
+Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][require#.scm]] [[http://github.com/weaver/gambit-prelude/blob/master/_require.scm][_require.scm]]
 
 * Contributers
 ** <<Ben>> Weaver
