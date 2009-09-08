@@ -63,3 +63,11 @@ div.figure p { text-align: center; }
 /* ==================== Additional org-mode styles ==================== */
 
 .outline-2 { margin-bottom: 2em; }
+
+/* ==================== Examples ==================== */
+
+.example {}
+
+    .example .visible-markup, .example .source { margin: 0 0 1em 0; padding: 0.25em 0.5em; font-family: fixed; border: 1px solid black; background-color: #eee; }
+
+    .example .result { margin: 0 0 1em 0;  }   

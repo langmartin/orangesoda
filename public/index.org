@@ -54,6 +54,17 @@
     It is wise to avoid this whole mess, of course, and to structure
     projects around a model that supports templates.
 
+** jquery.dataset: HTML5 Dataset jQuery Plugin
+   Posted by [[Ben]] on <2009-09-08 Tue>.
+
+   The HTML5 specification allows [[http://dev.w3.org/html5/spec/Overview.html#attr-data][custom data attributes]] to be added
+   to any DOM element.  This jQuery plugin provides methods to
+   retrieve and manipulate custom attributes.
+
+   Read More: [[./jquery.dataset.org][The jquery.dataset Plugin]]
+   
+   Download: [[./javascript/jquery.dataset.js][jquery.dataset.js]]
+
 * =ht= templates for HTML
   <<ht>> by [[Lang]]. <2009-07-02 Thu>
   for Javascript, Emacs Lisp, and Scheme (Python coming soon)

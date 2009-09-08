@@ -41,9 +41,11 @@
       :style "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/site.css\" />")
 
      ,(funcall static-media "css")
+     ,(funcall static-media "js")
 
      ,(funcall code-dir "ht")
      ,(funcall code-dir "scheme")
+     ,(funcall code-dir "javascript")
 ;     ,(funcall code-dir "continuations")     
 
      ("the-blag" :components ,components)))  
