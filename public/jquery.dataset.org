@@ -15,7 +15,7 @@
 
   Download: [[./javascript/jquery.dataset.js][jquery.dataset.js]]
 
-  Tested: FF, Safari, Chrome
+  Tested: FF, Safari, Chrome, Opera, IE6, IE7, IE8
   
 * Documentation
 
