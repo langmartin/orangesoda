@@ -28,6 +28,7 @@ fluid.prototype = {
        foo.let(2, function () {
                  result = result && (foo.val() == 2);
                });
+       result = result && (foo.val() == 1);
        return result;
      }
    );
