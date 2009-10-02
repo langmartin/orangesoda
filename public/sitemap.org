@@ -1,7 +1,0 @@
-#+TITLE: Index for project orgfiles
-
-   + ..
-     + [[file:../index.org][orangesoda.net]]
-     + [[file:../jquery.dataset.org][HTML5 Dataset jQuery Plugin]]
-     + [[file:../license.org][The orangesoda.net Copyright]]
-     + [[file:../sitemap.org][Index for project orgfiles]]
