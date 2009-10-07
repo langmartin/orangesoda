@@ -106,16 +106,13 @@ The key to bind is defined by html-script-key")
     ("<style[ \t]+type=\"css\"" "</style>" css-mode c-mode)
     ("<script[ \t]+language=\"vbscript\"[ \t]*>" "</script>" visual-basic-mode)
     ("<script[ \t]+type=\"text/vbscript\"[ \t]*>" "</script>" visual-basic-mode)
-    ("<script[ \t]+language=\"javascript\"[ \t]*>" "</script>"
-     ecmascript-mode jde-mode java-mode javascript-generic-mode c-mode)
-    ("<script[ \t]+type=\"text/javascript\"[ \t]*>" "</script>"
-     ecmascript-mode jde-mode java-mode javascript-generic-mode c-mode))
+    ("<script[ \t]+language=\"vbscript\".*>" "</script>" visual-basic-mode)
+    ("<script[ \t]+language=\"jscript\".*>" "</script>" js2-mode)
+    ("<script[ \t]+language=\"javascript\"[ \t]*>" "</script>" js2-mode)
+    ("<script[ \t]+type=\"text/javascript\"[ \t]*>" "</script>" js2-mode))
   "Define script regions.  Each entry should consist of a list of
   a starting regexp, an ending regexp, and a list of modes to try
   for that region in that order.")
-
-(defvar html-script-start-regexp
-  (concat "\\(" (mapconcat (lambda (x) (car x)) html-script-regions "\\|") "\\)"))
 
 (defvar html-script-original-mode nil)
 (make-variable-buffer-local 'html-script-original-mode)
@@ -132,9 +129,8 @@ The key to bind is defined by html-script-key")
           (lp (lambda (regions)
                 (if (null regions) (message "Not in a script region.")
                   (progn
-                    (if (re-search-backward (concat "\\(" (caar regions) "\\)")
-                                            nil
-                                            t)
+                    (if (re-search-backward
+                         (concat "\\(" (caar regions) "\\)") nil t)
                         (progn
                           (goto-char (match-end 1))
                           (if (eolp) (forward-char))
@@ -154,7 +150,8 @@ The key to bind is defined by html-script-key")
               (if (eolp) (forward-char))
               (setq html-script-original-mode major-mode)
               (narrow-to-region beg (point))
-              (loop for x in modes when (fboundp x) do (funcall x) and return nil
+              (loop for x in modes when (fboundp x)
+                    do (funcall x) and return nil
                     finally do (error "html-script: no relevant mode found."))
               (html-script-install-widen-key))
           (message "Not in a script region."))
