@@ -1,5 +1,5 @@
 * =ht= templates for HTML
-  <<ht>> by [[Lang]]. <2009-07-02 Thu>
+  <<ht>> by [[Lang]]. [2009-07-02 Thu]
   for Javascript, Emacs Lisp, and Scheme (Python coming soon)
 
 ** Motivation

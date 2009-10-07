@@ -1,5 +1,5 @@
 * Classic ASP
-  by [[Lang]]. <2009-07-17 Fri>
+  by [[Lang]]. [2009-07-17 Fri]
 
   I'm currently working in classic ASP, which supports javascript as
   server-side language. I'd like to get John Resig's [[http://ejohn.org/blog/bringing-the-browser-to-the-server/][env.js]] working
