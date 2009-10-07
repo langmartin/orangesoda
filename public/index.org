@@ -1,6 +1,18 @@
 #+TITLE: orangesoda.net
 
 * Emacs Lisp
+** Emacs Notes & Cheat Sheets
+   by [[Lang]]. [2009-07-02 Thu]
+
+   I just use this to keep a stack of things I've learned recently
+   about emacs. I've only been using it for 8 years, so this happens
+   all the time.
+
+   - VC Annotate :: =C-x v g= for line-by-line history.
+   - URL Encoding :: =org-link-unescape= and =org-link-escape=.
+   - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
+   - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
+
 ** SRFI-2 =and-let*=
    <<SRFI-2.el>> by [[Lang]]. [2009-07-17 Fri]
 
@@ -35,7 +47,6 @@
    syntax, and the script tags are certainly that. This seems like a
    workable solution for mixed javascript, at least until =js2-mode=
    can play nicely with multi-modes.
-
 
 * Javascript
   Some notes on [[./classic-asp.html][Classic ASP]].
