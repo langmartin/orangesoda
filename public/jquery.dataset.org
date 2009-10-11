@@ -1,0 +1,134 @@
+#+TITLE: HTML5 Dataset jQuery Plugin
+
+* Introduction
+
+  The HTML5 specification allows [[http://dev.w3.org/html5/spec/Overview.html#attr-data][custom data attributes]] to be added to
+  any DOM element.  Each custom attibute name must be prefixed with
+  =data-=.  An element's custom attributes may be conveniently
+  accessed through [[http://dev.w3.org/html5/spec/Overview.html#dom-dataset][element.dataset]], a mapping of (name, value) items
+  where each name is the custom attribute with the =data-= prefix
+  removed.
+
+  This jQuery plugin adds the =jQuery.fn.dataset= method.  It may be
+  used in a similar manner to jQuery's built-in =data= and =attr=
+  methods.
+
+  Download: [[./javascript/jquery.dataset.js][jquery.dataset.js]]
+
+  Tested: FF, Safari, Chrome, Opera, IE6, IE7, IE8
+  
+* Documentation
+
+  The use of "name" here means the name of a custom attribute without
+  the =data-= prefix.
+
+*** dataset()
+    Return an object with all custom attribute (name, value) items.
+
+*** dataset(name)
+    Return the value of the attribute `data-NAME'.
+
+*** dataset(name, value)
+    Set the value of attribtue `data-NAME' to VALUE.
+
+*** dataset({...})
+    Set many custom attributes at once.
+
+*** removeDataset(name)
+    Remove the attribute `data-NAME'.
+
+*** removeDataset([n1, n2, ...])
+    Remove the attributes `data-N1', `data-N2', ...
+
+* Examples
+
+** Example 1: get one attribute value
+
+#+BEGIN_HTML
+  <form class="example">
+    <div class="markup">
+      <div id="example-1" data-a="alpha" data-b="beta"></div>
+    </div>
+    <div class="source">
+      $('#example-1').dataset('a');
+    </div>
+    <div class="buttons">
+      <input type="submit" id="get-example-1" value="Get A" />
+    </div>
+  </form>
+#+END_HTML
+
+** Example 2: set one attribute value
+
+#+BEGIN_HTML
+  <form class="example">
+    <div class="markup">
+      <div id="example-2" data-a="alpha" data-b="beta"></div>
+    </div>
+    <div class="source">
+      $('#example-2').dataset('a', value);
+    </div>
+    <div class="buttons">
+      <input type="text" id="set-example-2-value" value="foo" />
+      <input type="submit" id="set-example-2" value="Set A" />
+    </div>
+  </form>
+#+END_HTML
+
+** Example 3: get all attribute values
+
+#+BEGIN_HTML
+  <form class="example">
+    <div class="markup">
+      <div id="example-3" data-a="alpha" data-b="beta"></div>
+    </div>
+    <div class="source">
+      $('#example-3').dataset();
+    </div>
+    <div class="buttons">
+      <input type="submit" id="get-example-3" value="Get All" />
+    </div>
+  </form>
+#+END_HTML
+
+** Example 4: set many attribute values
+
+#+BEGIN_HTML
+  <form class="example">
+    <div class="markup">
+      <div id="example-4" data-a="alpha" data-b="beta"></div>
+    </div>
+    <div class="source">
+      $('#example-4').dataset({ ... });
+    </div>
+    <div class="buttons">
+      <input type="text" id="set-example-4-value" value="{ foo: 'bar', b: 'baz' }" />
+      <input type="submit" id="set-example-4" value="Set!" />
+    </div>
+  </form>
+#+END_HTML
+
+** Example 5: remove attribute values
+
+#+BEGIN_HTML
+  <form class="example">
+    <div class="markup">
+      <div id="example-5" data-a="alpha" data-b="beta" data-c="gamma"></div>
+    </div>
+    <div class="source">
+      $('#example-5').removeDataset(['a', ...]);
+    </div>
+    <div class="buttons">
+      <input type="text" id="remove-example-5-value" value="a, b" />
+      <input type="submit" id="remove-example-5" value="Remove!" />
+    </div>
+  </form>
+#+END_HTML
+
+#+BEGIN_HTML
+  <script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="javascript/jquery.dataset.js"></script>
+  <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-dataset-examples.js"></script>
+#+END_HTML
+

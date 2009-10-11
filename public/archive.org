@@ -1,0 +1,41 @@
+* =ht= templates for HTML
+  <<ht>> by [[Lang]]. [2009-07-02 Thu]
+  for Javascript, Emacs Lisp, and Scheme (Python coming soon)
+
+** Motivation
+
+- Templates are safe.
+- CSS selectors are compact and standard (see HAML).
+- printf-style replacements help control types.
+- Native lists facilitate writing code to produce =ht= arguments.
+
+** Examples
+#+BEGIN_SRC js2
+ht(["html",
+    ["head",
+     ["title", "template test"]],
+    ["body",
+     ["div#container",
+      ["h1#head", "a title"],
+      ["p#text", "%s"]]]]);
+#+END_SRC
+
+** Sources
+   :PROPERTIES:
+   :ORDERED:  1
+   :END:
+
+*** DONE Javascript (also ASP Jscript): [[./ht/ht.js]]
+
+    The javascript is the proof of concept, and it works. A larger
+    part than I anticipated consists of utilities that are in the
+    style of jQuery. Using ht server-side, I wanted jQuery
+    manipulations pretty frequently, so perhaps the ht format works
+    best as jQuery extension.
+
+    The jury is out.
+
+*** TODO Emacs Lisp: [[ht/ht.el]]
+    So far, the emacs lisp implementation of ht has yeilded some small
+    utilities of convenience. See [[SRFI-2.el]].
+

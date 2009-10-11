@@ -1,0 +1,73 @@
+@import url('reset-font-grids.css');
+@import url('base.css');
+
+html { font-family: helvetica, arial, clean, sans-serif; font-size: 16px; }
+
+    body { margin:auto; text-align:left; width:57.69em; *width:56.25em; }
+
+    ol, ul, dl { margin-left: 0em; }
+
+    h2 { font-family: arial, helvetica, verdana, sans-serif; font-weight: normal; border-bottom: 1px dotted #ccc; font-size: 1.5em; }
+
+    h3 { font-size: 1.2em; }
+
+    h4 { margin: 0.5em 0; }
+
+/* ==================== org-mode default styles ==================== */
+
+.title  { text-align: center; }
+
+.todo   { color: red; }
+
+.done   { color: green; }
+
+.tag    { background-color:lightblue; font-weight:normal }
+
+.target { }
+
+.timestamp { color: grey }
+
+.timestamp-kwd { color: CadetBlue }
+
+p.verse { margin-left: 3% }
+
+pre {
+    border: 1pt solid #AEBDCC;
+    background-color: #F3F5F7;
+    padding: 5pt;
+    font-family: courier, monospace;
+    font-size: 90%;
+    overflow:auto;
+}
+
+table { border-collapse: collapse; }
+
+td, th { vertical-align: top; }
+
+dt { font-weight: bold; }
+
+div.figure { padding: 0.5em; }
+
+div.figure p { text-align: center; }
+
+.linenr { font-size:smaller }
+
+.code-highlighted {background-color:#ffff00;}
+
+.org-info-js_info-navigation { border-style:none; }
+
+#org-info-js_console-label { font-size:10px; font-weight:bold; white-space:nowrap; }
+
+.org-info-js_search-highlight {background-color:#ffff00; color:#000000; font-weight:bold; }
+
+/* ==================== Additional org-mode styles ==================== */
+
+.outline-2 { margin-bottom: 2em; }
+
+/* ==================== Examples ==================== */
+
+.example {}
+
+    .example .visible-markup, .example .source { margin: 0 0 1em 0; padding: 0.25em 0.5em; font-family: fixed; border: 1px solid black; background-color: #eee; }
+
+    .example .result { margin: 0 0 1em 0;  }   
