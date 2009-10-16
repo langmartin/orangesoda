@@ -1,18 +1,6 @@
 #+TITLE: orangesoda.net
 
-* Emacs Lisp
-** Emacs Notes & Cheat Sheets
-   by [[Lang]]. [2009-07-02 Thu]
-
-   I just use this to keep a stack of things I've learned recently
-   about emacs. I've only been using it for 8 years, so this happens
-   all the time.
-
-   - VC Annotate :: =C-x v g= for line-by-line history.
-   - URL Encoding :: =org-link-unescape= and =org-link-escape=.
-   - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
-   - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
-
+* Emacs
 ** SRFI-2 =and-let*=
    <<SRFI-2.el>> by [[Lang]]. [2009-07-17 Fri]
 
@@ -49,16 +37,24 @@
    workable solution for mixed javascript, at least until =js2-mode=
    can play nicely with multi-modes.
 
-* Javascript
-  Some notes on [[./classic-asp.html][Classic ASP]].
+** Emacs Notes & Cheat Sheets
+   by [[Lang]]. [2009-07-02 Thu]
 
-** Fluid Variables (aka Dynamic Scoping, aka Parameters)
+   I just use this to keep a stack of things I've learned recently
+   about emacs. I've only been using it for 8 years, so this happens
+   all the time.
+
+   - VC Annotate :: =C-x v g= for line-by-line history.
+   - URL Encoding :: =org-link-unescape= and =org-link-escape=.
+   - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
+   - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
+
+* Javascript
+** Fluid Bindings (aka Dynamic Scoping, aka Parameters)
    <<fluid.js>> by [[Lang]]. [2009-07-17 Fri]
 
    Fluid bindings follow the flow of control rather than the lexical
-   order of a program. See wikipedia on [[http://en.wikipedia.org/wiki/Scope_%28programming%29#Dynamic_scoping][Dynamic Scoping]]. Fluid binding
-   in Javascript is easy to implement, since it (typically) lacks
-   threads or continuations.
+   order of a program. See wikipedia on [[http://en.wikipedia.org/wiki/Scope_%28programming%29#Dynamic_scoping][Dynamic Scoping]].
 
    The code: [[./javascript/fluid.js][fluid.js]].
 
