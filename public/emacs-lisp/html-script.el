@@ -2,10 +2,12 @@
 ;;                   and visual basic embedded in (X)HTML
 ;;
 ;; Copyright (C) 2005 by P J Heslin
+;; Copyright (C) 2009 by Lang Martin
 ;;
-;; Author: Peter Heslin <p.j.heslin@dur.ac.uk>
-;; URL: http://www.dur.ac.uk/p.j.heslin/Software/Emacs/Download/html-script.el
-;; Version: 2.1
+;; Authors: Peter Heslin <p.j.heslin@dur.ac.uk>,
+;;          Lang Martin <lang.martin@gmail.com>
+;; URL: http://orangesoda.net/emacs-lisp/html-script.el
+;; Version: 2.2
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
