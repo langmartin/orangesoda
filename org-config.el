@@ -46,9 +46,10 @@
      ,(funcall code-dir "ht")
      ,(funcall code-dir "scheme")
      ,(funcall code-dir "javascript")
+     ,(funcall code-dir "emacs-lisp")
 ;     ,(funcall code-dir "continuations")     
 
-     ("the-blag" :components ,components)))  
+     ("the-blag" :components ,components)))
   )
 
 
