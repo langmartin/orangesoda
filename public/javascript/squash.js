@@ -238,5 +238,3 @@ squash.tests = function () {
       return ["JOIN ON", item.name, "=", ver.name];
     });
 };
-
-squash.tests();
