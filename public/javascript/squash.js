@@ -149,12 +149,12 @@ var squash;
 
      // WHERE
      result.push("WHERE");
-     function where (env) {
+     function where (env, driver) {
        if (! env.where) return [];
        return env.where(driver);
      }
-     tmp = where(env);
-     if (env.join) tmp = tmp.concat(where(env.join.other.env));
+     tmp = where(env, driver);
+     if (env.join) tmp = tmp.concat(where(env.join.other.env, driver));
      result.push(tmp.join(" AND "));
 
      return result.join(" ");
@@ -178,11 +178,13 @@ var squash;
      };
    };
 
+   function sqlstring (val) {
+     val += "";
+     return ["'", val.replace(/\'/g, "''"), "'"].join('');
+   }
+
    def("string",
-       function (val) {
-         val += "";
-         return ["'", val.replace(/\'/g, "''"), "'"].join('');
-       },
+       sqlstring,
        function (val) {
          return "" + val;
        });
@@ -197,7 +199,7 @@ var squash;
 
    def("date",
        function (val, lib) {
-         return str(sqldate(val));
+         return sqlstring(sqldate(val));
        },
        function (val) {
          return new Date(val);
