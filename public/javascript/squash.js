@@ -23,11 +23,10 @@ var squash;
      join: makemethod(join),
      eachfield: function (proc) {
        var ii = 0;
-       $.each(
-         this.env.from.fields, function (key, val) {
-           proc(ii, key, val);
-           ii++;
-         });
+       for (var key in this.env.from.fields) {
+         proc(ii, key, this.env.from.fields[key]);
+         ii++;
+       }
      }
    };
 
@@ -127,10 +126,10 @@ var squash;
      var result = ["SELECT"];
      function select (env) {
        var result = [];
-       $.each(env.from.fields, function (field, type) {
-                var col = driver.field(env.from.table, field);
-                if (col) result.push(col);
-              });
+       for (var field in env.from.fields) {
+         var col = driver.field(env.from.table, field);
+         if (col) result.push(col);
+       }
        return result;
      }
      var tmp = select(env);
@@ -162,10 +161,10 @@ var squash;
 
      function resolve (env) {
        var result = {};
-       $.each(env.from.fields, function (key, val) {
-                var field = driver.field(env.from.table, key);
-                if (field) result[key] = field;
-              });
+       for (var key in env.from.fields) {
+         var field = driver.field(env.from.table, key);
+         if (field) result[key] = field;
+       }
        return result;
      }
    };
@@ -226,7 +225,6 @@ var squash;
 
 squash.tests = function () {
   foo = squash("fnDocuments", {date: "date", "class": ""});
-  // bar = foo.where("date", ">", new Date()).where("class", "=", "valu'''e");
   bar = foo.or(foo.where("date", ">", new Date()),
                foo.where("class", "=", "valu'''e"));
   baz = squash("items", {date: "date", name: ""})
