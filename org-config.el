@@ -31,7 +31,7 @@
               :publishing-function org-publish-attachment))))
        (code-dir
         (lambda (dir)
-          (funcall orangesoda-dir dir "js\\\\|el\\\\|scm")))
+          (funcall orangesoda-dir dir "js\\|el\\|scm\\|html")))
        (static-media
         (lambda (dir)
           (funcall orangesoda-dir dir "js\\|css\\|png\\|jpg\\|gif"))))
