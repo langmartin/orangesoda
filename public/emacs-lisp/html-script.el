@@ -126,19 +126,23 @@ The key to bind is defined by html-script-key")
 
 (defun html-script-narrow ()
   (interactive)
-  (save-excursion
-    (let ((orig (point))
-          (lp (lambda (regions)
-                (if (null regions) (message "Not in a script region.")
-                  (progn
-                    (if (re-search-backward
-                         (concat "\\(" (caar regions) "\\)") nil t)
-                        (progn
-                          (goto-char (match-end 1))
-                          (if (eolp) (forward-char))
-                          (html-script-narrow-handler orig (cdar regions)))
-                      (funcall lp (cdr regions))))))))
-      (funcall lp html-script-regions))))
+  (let ((start-re (mapconcat 'car html-script-regions "\\|")))
+    (save-excursion
+      (let ((orig (point)) (case-fold-search t))
+        (if (re-search-backward (concat "\\(" start-re "\\)") nil t)
+            (let* ((end-char (match-end 1))
+                   (lp
+                    (lambda (regions)
+                      (if (null regions)
+                          (error "html-script: regexp mismatch")
+                        (if (looking-at (caar regions))
+                            (progn
+                              (goto-char end-char)
+                              (if (eolp) (forward-char))
+                              (html-script-narrow-handler orig (cdar regions)))
+                          (funcall lp (cdr regions)))))))
+              (funcall lp html-script-regions))
+          (message "Not in a script region."))))))
 
 (defun html-script-narrow-handler (orig arg-list)
   (let ((ending-re (car arg-list))
@@ -156,7 +160,8 @@ The key to bind is defined by html-script-key")
                     do (funcall x) and return nil
                     finally do (error "html-script: no relevant mode found."))
               (html-script-install-widen-key))
-          (message "Not in a script region."))
+          (progn
+            (message "Not in a script region, end tag before start tag.")))
       (message "End of script region not found."))))
 
 (defun html-script-widen ()
