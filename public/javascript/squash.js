@@ -5,29 +5,9 @@ var squash;
    var end = null;
    var eRequired = new RangeError("Required statement missing.");
 
-   squash = function (table, fields) {
+   squash = function (table, extra) {
      var self = new statement();
-     return self.from(table, fields);
-   };
-
-   // Interface.
-  function statement (env, prev) {
-     this.env = env || {};
-     // if (prev) this.prev = prev;
-   };
-   statement.prototype = {
-     from: makemethod(from),
-     where: makemethod(where),
-     wherenotnull: makemethod(wherenotnull),
-     or: makemethod(or),
-     join: makemethod(join),
-     eachfield: function (proc) {
-       var ii = 0;
-       for (var key in this.env.from.fields) {
-         proc(ii, key, this.env.from.fields[key]);
-         ii++;
-       }
-     }
+     return self.from(table, extra);
    };
 
    // Support Functions.
@@ -39,113 +19,138 @@ var squash;
      return parseInt(number, 10);
    }
 
-   function makemethod (fn) {
-     return function () {
-       var args = slice.call(arguments);
-       args.unshift(this.env);
-       return new statement(fn.apply(this, args), this);
-     };
-   }
-
-   function environment (env) {
-     var self = {};
-     self.from = env.from;
-     self.where = env.where;
-     self.join = env.join;
-     return self;
-   }
-
-   // Statements.
-   function from (env, table, fields) {
-     if (env.from) throw TypeError("Use join to merge multiple from sets");
-     var self = environment(env);
-     self.from = {table: table, fields: fields};
-     return self;
-   }
-
-   function whereval (env, driver, col, val) {
-     return driver.type(env.from.table, col, env).tosql(
-       (typeof val == "function") ? val() : val
-     );
-   }
-
-   function where (env, col, op, val, fieldwrap) {
-     fieldwrap = fieldwrap || identity;
-     var self = environment(env);
-     self.where = function (driver) {
-       var result = [];
-       var field = fieldwrap(driver.field(env.from.table, col));
-       if (field) {
-         var expr = [field, op, whereval(env, driver, col, val)].join(" ");
-         if (env.where) result = env.where(driver);
-         result.push(expr);
+   // Interface.
+  function statement (env, prev) {
+     this.env = env || {};
+     // if (prev) this.prev = prev;
+   };
+   statement.prototype = {
+     _clone: function () {
+       var self = new statement();
+       for (var key in this.env) {
+         self.env[key] = this.env[key];
        }
-       return result;
-     };
-     return self;
-   }
-
-   function or (env, left, right) {
-     var self = environment(env);
-     self.where = function (driver) {
-       var result = [];
-       var expr = ["(",
-                   [left.env.where(driver).join(" AND "),
-                    right.env.where(driver).join(" AND ")
-                   ].join(" OR "),
-                   ")"
-                  ].join('');
-       if (env.where) result = env.where(driver);
-       result.push(expr);
-       return result;
-     };
-     return self;
-   }
-
-   function wherenotnull (env, col, op, val) {
-     return where(
-       env, col, op, val,
-       function (field) {
-           return ["ISNULL(", field, ", '')"].join('');
-       });
-   }
-
-   function join (env, other, handler) {
-     if (env.join) throw TypeError("Only one join permitted");
-     var self = environment(env);
-     self.join = {other: other, handler: handler};
-     return self;
-   }
+       return self;
+     },
+     from: function (table, extra) {
+       var self = this._clone(); var env = self.env;
+       if (env.from) throw TypeError("Use join to merge queries");
+       env.from = {table: table, extra: extra};
+       return self;
+     },
+     select: function (fields) {
+       var self = this._clone(); var env = self.env;
+       if (env.fields) env.fields = env.fields.concat(fields);
+       else env.fields = fields;
+       return self;
+     },
+     _where: function (col, op, val, tail) {
+       var self = this._clone(); var env = self.env;
+       var old = this.env;
+       tail = tail || function (col, op, val) {
+         return slice.call(arguments).join(" ");
+       };
+       self.env.where = function (driver) {
+         var result = [], value;
+         var field = driver.field(env.from.table, col);
+         if (field) {
+           value = (typeof val == "function") ? val() : val;
+           value = driver.type(env.from.table, col, env).tosql(value);
+           result.push(tail(field, op, value));
+           if (old.where) result = result.concat(old.where(driver));
+         }
+         return result;
+       };
+       return self;
+     },
+     where: function (col, op, val) {
+       return this._where(col, op, val);
+     },
+     or: function (left0, right0) {
+       var self = this._clone(); var env = self.env; var old = this.env;
+       env.where = function (driver) {
+         var result = [];
+         var left = left0.env.where(driver).join(" AND ");
+         var right = right0.env.where(driver).join(" AND ");
+         result.push(
+           ["(", [left, right].join(" OR "), ")"].join('')
+         );
+         if (old.where) result = result.concat(old.where(driver));
+         return result;
+       };
+       return self;
+     },
+     wherenotnull: function (col, op, val) {
+       return this._where(
+         col, op, val,
+         function (col, op, val) {
+           col = ["ISNULL(", col, ", '')"].join('');
+           return [col, op, val].join(" ");
+         }
+       );
+     },
+     join: function (how, other, handler) {
+       var self = this._clone(); var env = self.env;
+       how = how || "JOIN";
+       if (env.join) throw TypeError("Only one join permitted");
+       env.join = {how: how, other: other, handler: handler};
+       return self;
+     },
+     eachfield: function (proc) {
+       for (var ii in this.env.fields) {
+         proc(ii, this.env.fields[ii]);
+       }
+     }
+   };
 
    // Export.
    statement.prototype.toString = function (driver) {
      driver = driver || new squash.default_driver();
      var env = this.env;
+     var self = this;
+     var result = [];
 
      // SELECT
-     var result = ["SELECT"];
-     function select (env) {
+     function select (self) {
+       var env = self.env;
        var result = [];
-       for (var field in env.from.fields) {
-         var col = driver.field(env.from.table, field);
-         if (col) result.push(col);
-       }
+       self.eachfield(
+         function (ii, field) {
+           var col = driver.field(env.from.table, field);
+           if (col) result.push(col);
+         });
        return result;
      }
-     var tmp = select(env);
-     if (env.join) tmp = tmp.concat(select(env.join.other.env));
-     result.push(tmp.join(", "));
+     var tmp = select(self);
+     if (env.join) tmp = tmp.concat(select(env.join.other));
+     result.push("SELECT", tmp.join(", "));
 
      // JOIN || FROM
-     if (env.join) {
-       result.push(
-         env.join.handler(
-           resolve(env), resolve(env.join.other.env)
-         ).join(" ")
-       );
-     } else {
-       result.push("FROM", env.from.table);
-     }
+     (function () {
+        var tmp = [];
+        function table (env) {
+          tmp.push(env.from.table);
+          if (env.from.extra) tmp.push(env.from.extra);
+        }
+        result.push("FROM");
+        if (env.join) {
+          table(env);
+          tmp.push(env.join.how);
+          table(env.join.other.env);
+          env.join.handler(
+            function (arg0, arg1) {
+              tmp.push("ON");
+              tmp = tmp.concat(slice.call(arguments));
+            },
+            resolve(env),
+            resolve(env.join.other.env)
+          );
+          result.push(tmp.join(" "));
+        } else {
+          result.push(env.from.table);
+          if (env.from.extra) result.push(env.from.extra);
+        }
+      })();
 
      // WHERE
      result.push("WHERE");
@@ -161,10 +166,11 @@ var squash;
 
      function resolve (env) {
        var result = {};
-       for (var key in env.from.fields) {
-         var field = driver.field(env.from.table, key);
-         if (field) result[key] = field;
-       }
+       self.eachfield(
+         function (ii, field) {
+           var val = driver.field(env.from.table, field);
+           if (val) result[field] = val;
+         });
        return result;
      }
    };
@@ -206,10 +212,11 @@ var squash;
        }); 
 
    function sqldate (date) {
-     return [[date.getDate(), date.getMonth(), date.getFullYear()].join("/"),
-             [date.getHours(), date.getMinutes(), 
-              date.getSeconds()].join(":")
-            ].join(" ");
+     return sprintf(
+       "%02d/%02d/%04d %02d:%02d:%02d",
+       (date.getMonth() + 1), date.getDate(), date.getFullYear(),
+       date.getHours(), date.getMinutes(), date.getSeconds()
+     );
    }
 
    //// Default Driver
@@ -219,22 +226,85 @@ var squash;
        return [tab, field].join(".");
      },
      type: function (tab, field, env) {
-       var key = env.from.fields[field] || "string";
+       var key = squash.type[field] || "string";
        return squash.type_defs[key];
      }
    };
  })();
 
 squash.tests = function () {
-  foo = squash("fnDocuments", {date: "date", "class": ""});
-  bar = foo.or(foo.where("date", ">", new Date()),
-               foo.where("class", "=", "valu'''e"));
-  baz = squash("items", {date: "date", name: ""})
-    .where("name", "=", "lang");
-  zup = baz.join(
-    squash("versions", {name: "", current: "integer"})
-      .where("current", "=", "1"),
-    function (item, ver) {
-      return ["JOIN ON", item.name, "=", ver.name];
+  function assert (thunk0, thunk1) {
+    var thunk;
+    for (var ii=0; ii<arguments.length; ii++) {
+      thunk = arguments[ii];
+      if (! (thunk())) {
+        throw new Error("" + thunk);
+      }
+    }
+  }
+
+  squash.type = {date: "date", current: "integer"};
+  foo = squash("fnDocuments").select(["date", "class"]);
+  foo0 = foo;
+  foo1 = foo.where("date", ">", new Date("9/27/2009 15:08:09"));
+
+  assert(
+    function () {
+      return ((foo === foo0) && (foo !== foo1)
+              && (foo.env === foo0.env) && (foo.env !== foo1.env));
     });
+
+  bar = foo.or(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
+               foo.where("class", "=", "valu'''e"));
+
+  baz = squash("item").where("name", "=", "lang").select(["name"]);
+  zup = squash("version").where("current", "=", "1")
+    .select(["name", "current"]);
+
+  quux = baz.join(
+    "INNER JOIN", zup, function (where, item, ver) {
+      return where(item.name, "=", ver.name);
+    });
+
+  assert(
+    function () {
+      return "" + foo ==
+        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE ";
+    },
+    function () {
+      return bar.toString() ==
+        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE "
+        + "(fnDocuments.date > '09/27/2009 15:08:09' "
+        + "OR fnDocuments.class = 'valu''''''e')";
+    },
+    function () {
+      return "" + baz ==
+        "SELECT item.name FROM item WHERE item.name = 'lang'";
+    },
+    function () {
+      return "" + zup ==
+        "SELECT version.name, version.current FROM version"
+        + " WHERE version.current = 1";
+    },
+    function () {
+      return "" + quux ==
+        "SELECT item.name, version.name, version.current "
+        + "FROM item INNER JOIN version ON item.name = version.name "
+        + "WHERE item.name = 'lang' "
+        + "AND version.current = 1";
+    },
+
+    function () {
+      var foo = squash("el", "with (NO LOCK)").select(["name", "addr"])
+        .where("name", "=", "lang");
+      var bar = squash("mv", "with (NO LOCK)");
+      tonk = foo.join("", bar, function (on, foo, bar) {
+                        return on(foo.name, '=', bar.name);
+                      });
+      return "" + tonk ==
+        "SELECT el.name, el.addr FROM el with (NO LOCK)"
+        + " JOIN mv with (NO LOCK) ON el.name = mv.name"
+        + " WHERE el.name = 'lang'";
+    }
+  );
 };
