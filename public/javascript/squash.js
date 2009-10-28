@@ -106,7 +106,7 @@ var squash;
      },
      eachfield: function (proc) {
        function lp (cols, tab) {
-         for (var ii in cols) proc(ii, cols[ii], tab);
+         for (var ii=0; ii<cols.length; ii++) proc(ii, cols[ii], tab);
        }
        var cols;
        if ((cols = this.env.select)) lp(this.env.select, this.env.from.table);
