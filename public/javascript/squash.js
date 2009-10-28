@@ -19,6 +19,10 @@ var squash;
      return parseInt(number, 10);
    }
 
+   function isArray (obj) {
+     return ((typeof obj == "object") && (obj.length !== undefined));
+   }
+
    // Interface.
   function statement (env, prev) {
      this.env = env || {};
@@ -38,10 +42,12 @@ var squash;
        env.from = {table: table, extra: extra};
        return self;
      },
-     select: function (fields) {
+     select: function (columns) {
+       if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
-       if (env.fields) env.fields = env.fields.concat(fields);
-       else env.fields = fields;
+       var key = (env.join) ? "select_join" : "select";
+       if (env[key]) env[key] = env[key].concat(columns);
+       else env[key] = columns;
        return self;
      },
      _where: function (col, op, val, tail) {
@@ -97,8 +103,9 @@ var squash;
        return self;
      },
      eachfield: function (proc) {
-       for (var ii in this.env.fields) {
-         proc(ii, this.env.fields[ii]);
+       if (! this.env.select) return;
+       for (var ii in this.env.select) {
+         proc(ii, this.env.select[ii]);
        }
      }
    };
@@ -111,19 +118,27 @@ var squash;
      var result = [];
 
      // SELECT
-     function select (self) {
-       var env = self.env;
-       var result = [];
-       self.eachfield(
-         function (ii, field) {
-           var col = driver.field(env.from.table, field);
-           if (col) result.push(col);
-         });
-       return result;
-     }
-     var tmp = select(self);
-     if (env.join) tmp = tmp.concat(select(env.join.other));
-     result.push("SELECT", tmp.join(", "));
+     (function () {
+        function select (self) {
+          var env = self.env;
+          var result = [];
+          function lp (key, tab) {
+            if (! env[key]) return;
+            var ii, field, col;
+            for (ii = 0; ii < env[key].length; ii++) {
+              field = env[key][ii];
+              col = driver.field(tab, field);
+              if (col) result.push(col);
+            }
+          }
+          lp("select", env.from.table);
+          lp("select_join", false);
+          return result;
+        }
+        var tmp = select(self);
+        if (env.join) tmp = tmp.concat(select(env.join.other));
+        result.push("SELECT", tmp.join(", "));
+      })();
 
      // JOIN || FROM
      (function () {
@@ -142,8 +157,12 @@ var squash;
               tmp.push("ON");
               tmp = tmp.concat(slice.call(arguments));
             },
-            resolve(env),
-            resolve(env.join.other.env)
+            function (field) {
+              return driver.field(env.from.table, field);
+            },
+            function (field) {
+              return driver.field(env.join.other.env.from.table, field);
+            }
           );
           result.push(tmp.join(" "));
         } else {
@@ -153,26 +172,18 @@ var squash;
       })();
 
      // WHERE
-     result.push("WHERE");
-     function where (env, driver) {
-       if (! env.where) return [];
-       return env.where(driver);
-     }
-     tmp = where(env, driver);
-     if (env.join) tmp = tmp.concat(where(env.join.other.env, driver));
-     result.push(tmp.join(" AND "));
+     (function () {
+        result.push("WHERE");
+        function where (env, driver) {
+          if (! env.where) return [];
+          return env.where(driver);
+        }
+        tmp = where(env, driver);
+        if (env.join) tmp = tmp.concat(where(env.join.other.env, driver));
+        result.push(tmp.join(" AND "));
+      })();
 
      return result.join(" ");
-
-     function resolve (env) {
-       var result = {};
-       self.eachfield(
-         function (ii, field) {
-           var val = driver.field(env.from.table, field);
-           if (val) result[field] = val;
-         });
-       return result;
-     }
    };
 
    //// Type Definitions
@@ -223,6 +234,7 @@ var squash;
    squash.default_driver = function () {};
    squash.default_driver.prototype = {
      field: function (tab, field) {
+       if (! tab) return field;
        return [tab, field].join(".");
      },
      type: function (tab, field, env) {
@@ -263,7 +275,7 @@ squash.tests = function () {
 
   quux = baz.join(
     "INNER JOIN", zup, function (where, item, ver) {
-      return where(item.name, "=", ver.name);
+      return where(item("name"), "=", ver("name"));
     });
 
   assert(
@@ -295,14 +307,15 @@ squash.tests = function () {
     },
 
     function () {
-      var foo = squash("el", "with (NO LOCK)").select(["name", "addr"])
+      var foo = squash("el", "with (NO LOCK)").select("name")
         .where("name", "=", "lang");
       var bar = squash("mv", "with (NO LOCK)");
       tonk = foo.join("", bar, function (on, foo, bar) {
-                        return on(foo.name, '=', bar.name);
+                        return on(foo("name"), '=', bar("name"));
                       });
+      tonk = tonk.select("addr");
       return "" + tonk ==
-        "SELECT el.name, el.addr FROM el with (NO LOCK)"
+        "SELECT el.name, addr FROM el with (NO LOCK)"
         + " JOIN mv with (NO LOCK) ON el.name = mv.name"
         + " WHERE el.name = 'lang'";
     }
