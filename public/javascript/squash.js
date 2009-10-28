@@ -105,9 +105,16 @@ var squash;
        return self;
      },
      eachfield: function (proc) {
-       if (! this.env.select) return;
-       for (var ii in this.env.select) {
-         proc(ii, this.env.select[ii]);
+       function lp (cols, tab) {
+         for (var ii in cols) proc(ii, cols[ii], tab);
+       }
+       var cols;
+       if ((cols = this.env.select)) lp(this.env.select, this.env.from.table);
+       if ((cols = this.env.select_join)) lp(cols);
+       if (this.env.join) {
+         var other = this.env.join.other.env;
+         if ((cols = other.select)) lp(cols, other.from.table);
+         if ((cols = other.select_join)) lp(cols);
        }
      }
    };
@@ -121,24 +128,13 @@ var squash;
 
      // SELECT
      (function () {
-        function select (self) {
-          var env = self.env;
-          var result = [];
-          function lp (key, tab) {
-            if (! env[key]) return;
-            var ii, field, col;
-            for (ii = 0; ii < env[key].length; ii++) {
-              field = env[key][ii];
+        var col;
+        var tmp = [];
+        self.eachfield(
+          function (ii, field, tab) {
               col = driver.field(tab, field);
-              if (col) result.push(col);
-            }
-          }
-          lp("select", env.from.table);
-          lp("select_join", false);
-          return result;
-        }
-        var tmp = select(self);
-        if (env.join) tmp = tmp.concat(select(env.join.other));
+              if (col) tmp.push(col);
+          });
         result.push("SELECT", tmp.join(", "));
       })();
 
@@ -180,7 +176,7 @@ var squash;
           if (! env.where) return [];
           return env.where(driver);
         }
-        tmp = where(env, driver);
+        var tmp = where(env, driver);
         if (env.join) tmp = tmp.concat(where(env.join.other.env, driver));
         result.push(tmp.join(" AND "));
       })();
@@ -222,7 +218,7 @@ var squash;
        },
        function (val) {
          return new Date(val);
-       }); 
+       });
 
    function sqldate (date) {
      return sprintf(
@@ -307,7 +303,6 @@ squash.tests = function () {
         + "WHERE item.name = 'lang' "
         + "AND version.current = 1";
     },
-
     function () {
       var foo = squash("el", "with (NO LOCK)").select("name")
         .where("name", "=", "lang");
