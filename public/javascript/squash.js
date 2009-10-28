@@ -56,12 +56,14 @@ var squash;
        tail = tail || function (col, op, val) {
          return slice.call(arguments).join(" ");
        };
+       var isJoined = old.join; // evaluate this at construction
        self.env.where = function (driver) {
          var result = [], value;
-         var field = driver.field(env.from.table, col);
+         var table = (isJoined) ? false : env.from.table;
+         var field = driver.field(table, col);
          if (field) {
            value = (typeof val == "function") ? val() : val;
-           value = driver.type(env.from.table, col, env).tosql(value);
+           value = driver.type(table, col, env).tosql(value);
            result.push(tail(field, op, value));
            if (old.where) result = result.concat(old.where(driver));
          }
@@ -313,11 +315,11 @@ squash.tests = function () {
       tonk = foo.join("", bar, function (on, foo, bar) {
                         return on(foo("name"), '=', bar("name"));
                       });
-      tonk = tonk.select("addr");
+      tonk = tonk.select("addr").where("addr", "like", "foo%");
       return "" + tonk ==
         "SELECT el.name, addr FROM el with (NO LOCK)"
         + " JOIN mv with (NO LOCK) ON el.name = mv.name"
-        + " WHERE el.name = 'lang'";
+        + " WHERE addr like 'foo%' AND el.name = 'lang'";
     }
   );
 };
