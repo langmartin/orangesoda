@@ -23,6 +23,15 @@ var squash;
      return ((typeof obj == "object") && (obj.length !== undefined));
    }
 
+   function map (arr, proc) {
+     var result = [];
+     for (var ii = 0; ii < arr.length; ii++) {
+       result[ii] = proc(arr[ii], ii);
+       if (result[ii] === "false") break;
+     }
+     return result;
+   }
+
    // Interface.
   function statement (env, prev) {
      this.env = env || {};
@@ -54,7 +63,7 @@ var squash;
        var self = this._clone(); var env = self.env;
        var old = this.env;
        tail = tail || function (col, op, val) {
-         return slice.call(arguments).join(" ");
+         return [col, op, val].join(" ");
        };
        var isJoined = old.join; // evaluate this at construction
        self.env.where = function (driver) {
@@ -64,7 +73,7 @@ var squash;
          if (field) {
            value = (typeof val == "function") ? val() : val;
            value = driver.type(table, col, env).tosql(value);
-           result.push(tail(field, op, value));
+           result.push(tail(field, op, value, driver));
            if (old.where) result = result.concat(old.where(driver));
          }
          return result;
@@ -94,14 +103,27 @@ var squash;
          function (col, op, val) {
            col = ["ISNULL(", col, ", '')"].join('');
            return [col, op, val].join(" ");
-         }
-       );
+         });
+     },
+     wherein: function (col, values) {
+       var self = this._clone(); var env = self.env; var old = this.env;
+       env.where = function (driver) {
+         var result = [driver.wherein(env.from.table, col, values)];
+         if (old.where) result = result.concat(old.where(driver));
+         return result;
+       };
+       return self;
      },
      join: function (how, other, handler) {
        var self = this._clone(); var env = self.env;
        how = how || "JOIN";
        if (env.join) throw TypeError("Only one join permitted");
        env.join = {how: how, other: other, handler: handler};
+       return self;
+     },
+     driver: function (driver) {
+       var self = this._clone(); var env = self.env;
+       env.driver = driver;
        return self;
      },
      eachfield: function (proc) {
@@ -121,7 +143,7 @@ var squash;
 
    // Export.
    statement.prototype.toString = function (driver) {
-     driver = driver || new squash.default_driver();
+     driver = driver || this.env.driver || new squash.default_driver();
      var env = this.env;
      var self = this;
      var result = [];
@@ -238,6 +260,11 @@ var squash;
      type: function (tab, field, env) {
        var key = squash.type[field] || "string";
        return squash.type_defs[key];
+     },
+     wherein: function (tab, field, values) {
+       field = this.field(tab, field);
+       values = map(values, this.type("", field).tosql);
+       return [field, " IN ", "(", values.join(", "), ")"].join('');
      }
    };
  })();
@@ -315,6 +342,13 @@ squash.tests = function () {
         "SELECT el.name, addr FROM el with (NO LOCK)"
         + " JOIN mv with (NO LOCK) ON el.name = mv.name"
         + " WHERE addr like 'foo%' AND el.name = 'lang'";
+    },
+    function () {
+      baz = baz.wherein("foo", [1, 2, 3]);
+      return "" + baz ==
+        "SELECT item.name FROM item WHERE "
+        + "item.foo IN ('1', '2', '3')"
+        + " AND item.name = 'lang'";
     }
   );
 };
