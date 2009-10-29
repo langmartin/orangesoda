@@ -27,7 +27,7 @@ var squash;
      var result = [];
      for (var ii = 0; ii < arr.length; ii++) {
        result[ii] = proc(arr[ii], ii);
-       if (result[ii] === "false") break;
+       if (result[ii] === false) break;
      }
      return result;
    }
