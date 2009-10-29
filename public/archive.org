@@ -1,7 +1,8 @@
-#+TITLE: Archive pages to be deleted.
+* Archive
+  Things to be deleted.
 
 * =ht= templates for HTML
-  <<ht>> by [[Lang]]. [2009-07-02 Thu]
+  <<ht>> by [[file:lang.org][Lang]]. [2009-07-02 Thu]
   for Javascript, Emacs Lisp, and Scheme (Python coming soon)
 
 ** Motivation

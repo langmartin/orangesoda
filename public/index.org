@@ -1,8 +1,9 @@
-#+TITLE: orangesoda.net
+* Orangesoda
+  [[file:sitemap.org][Orangesoda Sitemap]].
 
 * Emacs
 ** SRFI-2 =and-let*=
-   <<SRFI-2.el>> by [[Lang]]. [2009-07-17 Fri]
+   <<SRFI-2.el>> by [[file:lang.org][Lang]]. [2009-07-17 Fri]
 
    An emacs-lisp implementation of [[http://srfi.schemers.org/srfi-2/][SRFI-2]], [[./emacs-lisp/srfi-2.el][srfi-2.el]]. =and-let*= is a
    combination of =and= and =let=, which (optionally) binds the result
@@ -20,7 +21,7 @@
    rather than raising an error.
 
 ** html-script.el
-   by [[Lang]]. [2009-10-07 Wed]
+   by [[file:lang.org][Lang]]. [2009-10-07 Wed]
 
    My version of [[./emacs-lisp/html-script.el][html-script.el]]. This code is originally from
    [[http://www.dur.ac.uk/p.j.heslin/Software/Emacs/]], and is a
@@ -39,7 +40,7 @@
 
 * Javascript
 ** Fluid Bindings (aka Dynamic Scoping, aka Parameters)
-   <<fluid.js>> by [[Lang]]. [2009-07-17 Fri]
+   <<fluid.js>> by [[file:lang.org][Lang]]. [2009-07-17 Fri]
 
    Fluid bindings follow the flow of control rather than the lexical
    order of a program. See wikipedia on [[http://en.wikipedia.org/wiki/Scope_%28programming%29#Dynamic_scoping][Dynamic Scoping]].
@@ -92,16 +93,11 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
    him on [[http://twitter.com/bwvr][Twitter]], see code on [[http://github.com/weaver][github]], or send an email to
    [his-first-name] at orangesoda.net.
 
-** <<Lang>> Martin
-   Also in Chattanooga, but keeping a low social networking profile.
-   You can email lang.martin at Gmail.
+** [[file:lang.org][Lang Martin]]
 
 * Wibler.com
   Wibler email & apps are hosted by Google:
   - [[http://mail.google.com/a/wibler.com/][email]]
   - [[http://www.google.com/calendar/a/wibler.com/][calendar]]
 
-* Links
-  - [[file:sitemap.org][Orangesoda Sitemap]]
-  - [[file:cheat-sheet.org][Lang's Cheat Sheet]]
-    
+

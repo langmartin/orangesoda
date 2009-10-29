@@ -1,5 +1,5 @@
 * Squash
-  by [[file:index.org::Lang][Lang]] [2009-10-29 Thu]
+  by [[file:lang][Lang]] [2009-10-29 Thu]
 
   Squash is a JavaScript library for expressing SQL queries using
   syntax rather than string concatenation. The expression objects can
