@@ -102,6 +102,6 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
   - [[http://www.google.com/calendar/a/wibler.com/][calendar]]
 
 * Links
-  - [[./sitemap.html][Orangesoda Sitemap]]
-  - [[./cheat-sheet.html][Lang's Cheat Sheet]]
+  - [[file:sitemap.org][Orangesoda Sitemap]]
+  - [[file:cheat-sheet.org][Lang's Cheat Sheet]]
     

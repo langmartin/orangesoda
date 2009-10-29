@@ -1,0 +1,17 @@
+* Squash
+  by [[file:index.org::Lang][Lang]] [2009-10-29 Thu]
+
+  Squash is a JavaScript library for expressing SQL queries using
+  syntax rather than string concatenation. The expression objects can
+  be combined more easily than strings, and ensure that data is typed
+  correctly.
+
+  Squash is loosely modeled on LINQ, but is a great deal more limited
+  at the moment. I developed it because I'm working in classic ASP and
+  wanted a layer of reasonable abstraction to distance my code from
+  the eccentric database layout imposed by the ORM.
+
+  Squash depends on [[http://code.google.com/p/sprintf/][sprintf]] (for formatting the date type).
+  Try [[file:javascript/squash.html][tests running in the browser]], and see the
+  [[file:javascript/squash.js][squash code]].
+  
