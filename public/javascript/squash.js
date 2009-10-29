@@ -105,10 +105,10 @@ var squash;
            return [col, op, val].join(" ");
          });
      },
-     wherein: function (col, values) {
+     wherein: function (col, op, values) {
        var self = this._clone(); var env = self.env; var old = this.env;
        env.where = function (driver) {
-         var result = [driver.wherein(env.from.table, col, values)];
+         var result = [driver.wherein(env.from.table, col, op, values)];
          if (old.where) result = result.concat(old.where(driver));
          return result;
        };
@@ -261,10 +261,17 @@ var squash;
        var key = squash.type[field] || "string";
        return squash.type_defs[key];
      },
-     wherein: function (tab, field, values) {
+     wherein: function (tab, field, op, values) {
        field = this.field(tab, field);
        values = map(values, this.type("", field).tosql);
-       return [field, " IN ", "(", values.join(", "), ")"].join('');
+       op = op.toLowerCase();
+       var operations = {
+         "=": " IN ",
+         "<>": " NOT IN ",
+         "like": " LIKE IN ",
+         "not like" : " NOT LIKE IN "
+       };
+       return [field, operations[op], "(", values.join(", "), ")"].join('');
      }
    };
  })();
@@ -344,10 +351,17 @@ squash.tests = function () {
         + " WHERE addr like 'foo%' AND el.name = 'lang'";
     },
     function () {
-      baz = baz.wherein("foo", [1, 2, 3]);
-      return "" + baz ==
+      var tmp = baz.wherein("foo", "=", [1, 2, 3]);
+      return "" + tmp ==
         "SELECT item.name FROM item WHERE "
         + "item.foo IN ('1', '2', '3')"
+        + " AND item.name = 'lang'";
+    },
+    function () {
+      baz = baz.wherein("foo", "not like", [1, 2, 3]);
+      return "" + baz ==
+        "SELECT item.name FROM item WHERE "
+        + "item.foo NOT LIKE IN ('1', '2', '3')"
         + " AND item.name = 'lang'";
     }
   );
