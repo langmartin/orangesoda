@@ -1,0 +1,49 @@
+#+TITLE: Lang's Cheat Sheet
+
+* Emacs
+  by [[Lang]]. [2009-07-02 Thu]
+
+  I just use this to keep a stack of things I've learned recently
+  about emacs. I've only been using it for 8 years, so this happens
+  all the time.
+
+  - VC Annotate :: =C-x v g= for line-by-line history.
+  - URL Encoding :: =org-link-unescape= and =org-link-escape=.
+  - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
+  - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
+
+* Windows
+  by [[Lang]] [2009-10-29 Thu]
+
+** Install Flash Manually
+   1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
+   2. Rename to =.zip=
+   3. Copy =NPSWF32.dll= and =flashplayer.xpt= to =Mozilla Firefox\plugins= [fn:plugins]
+   4. Restart
+   5. http://www.mozilla.com/en-US/plugincheck/
+
+[fn:plugins] Firefox plugins can be installed either in the global
+directory or in your =Application Data= directory, although a
+=plugins= sub-folder might not exist. IE plugins (on XP) seem to go in
+=system32\Macromed\Flash=.
+
+** Classic ASP Order of Evaluation
+   by [[Lang]]. [2009-07-17 Fri]
+
+   Classic ASP supports a few different language platforms, although
+   it seems rare to see anything other than VBScript and JScript. The
+   order of evaluation is:
+
+   0. The language tag.
+   1. =<script>= tags in the non-default language.
+   2. =<script>= tags in the default language.
+   3. Static HTML and =<% %>= blocks in order.
+
+   There are some restrictions on the type of data that can be passed
+   between languages, but functions appear to be fair game. I've had
+   success programming in JScript by leaving the default language
+   alone and preparing thunks that produce output. I can call those
+   thunks in the page as =<% foo_thunk %>=.
+
+   I've had even better success dumping JSON to the client and keeping
+   the HTML on the client side.

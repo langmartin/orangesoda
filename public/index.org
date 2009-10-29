@@ -37,18 +37,6 @@
    workable solution for mixed javascript, at least until =js2-mode=
    can play nicely with multi-modes.
 
-** Emacs Notes & Cheat Sheets
-   by [[Lang]]. [2009-07-02 Thu]
-
-   I just use this to keep a stack of things I've learned recently
-   about emacs. I've only been using it for 8 years, so this happens
-   all the time.
-
-   - VC Annotate :: =C-x v g= for line-by-line history.
-   - URL Encoding :: =org-link-unescape= and =org-link-escape=.
-   - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
-   - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
-
 * Javascript
 ** Fluid Bindings (aka Dynamic Scoping, aka Parameters)
    <<fluid.js>> by [[Lang]]. [2009-07-17 Fri]
@@ -112,3 +100,8 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
   Wibler email & apps are hosted by Google:
   - [[http://mail.google.com/a/wibler.com/][email]]
   - [[http://www.google.com/calendar/a/wibler.com/][calendar]]
+
+* Links
+  - [[./sitemap.html][Orangesoda Sitemap]]
+  - [[./cheat-sheet.html][Lang's Cheat Sheet]]
+    
