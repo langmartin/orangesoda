@@ -1,5 +1,6 @@
 * Orangesoda
-  [[file:sitemap.org][Orangesoda Sitemap]].
+  [[file:sitemap.org][Sitemap]] and [[file:license.org][License]]. Everything on this site falls under the license
+  unless otherwise noted.
 
 * Emacs
 ** SRFI-2 =and-let*=
@@ -93,7 +94,8 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
    him on [[http://twitter.com/bwvr][Twitter]], see code on [[http://github.com/weaver][github]], or send an email to
    [his-first-name] at orangesoda.net.
 
-** [[file:lang.org][Lang Martin]]
+** <<Lang>> Martin
+   [[file:lang.org][Lang Martin]] also lives in Chattanooga.
 
 * Wibler.com
   Wibler email & apps are hosted by Google:

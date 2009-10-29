@@ -1,5 +1,5 @@
 * Lang Martin
-  I also live in Chattanooga. Email lang.martin at Gmail.
+  Email lang.martin at Gmail.
 
 * Cheat Sheets
 ** Emacs
