@@ -83,19 +83,23 @@ var squash;
      where: function (col, op, val) {
        return this._where(col, op, val);
      },
-     or: function (left0, right0) {
+     or: function (left0, right0, op) {
+       op = op || " OR ";
        var self = this._clone(); var env = self.env; var old = this.env;
        env.where = function (driver) {
          var result = [];
          var left = left0.env.where(driver).join(" AND ");
          var right = right0.env.where(driver).join(" AND ");
          result.push(
-           ["(", [left, right].join(" OR "), ")"].join('')
+           ["(", [left, right].join(op), ")"].join('')
          );
          if (old.where) result = result.concat(old.where(driver));
          return result;
        };
        return self;
+     },
+     and: function (left, right) {
+       return this.or(left, right, " AND ");
      },
      wherenotnull: function (col, op, val) {
        return this._where(
