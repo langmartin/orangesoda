@@ -110,15 +110,19 @@ var squash;
      or: function (left, right, op) {
        var self = this._clone(); var env = self.env; var old = this.env;
        op = op || " OR ";
-       env.where = function (driver) {
+       env.where = function (driver, clip) {
          var result = [];
          function clause (where) {
-           return where.env.where(driver, "clip").join(" AND ");
+           var arr = where.env.where(driver, "clip");
+           if (arr.length == 1) return arr[0];
+           return ["(", arr.join(" AND "), ")"].join('');
          }
          result.push(
            ["(", [clause(left), clause(right)].join(op), ")"].join('')
          );
-         if (old.where) result = result.concat(old.where(driver));
+         if ((!clip) && old.where) {
+           result = result.concat(old.where(driver));
+         }
          return result;
        };
        return self;
@@ -378,12 +382,12 @@ squash.tests = function () {
     },
     function () {
       foo = foo.where("test", "=", "test");
-      foo = foo.or(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
-                   foo.where("class", "=", "valu'''e"));
+      foo = foo.and(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
+                    foo.where("class", "=", "valu'''e"));
       return "" + foo ==
         "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE "
         + "(fnDocuments.date > '09/27/2009 15:08:09' "
-        + "OR fnDocuments.class = 'valu''''''e') "
+        + "AND fnDocuments.class = 'valu''''''e') "
         + "AND fnDocuments.test = 'test'";
     }
   );
