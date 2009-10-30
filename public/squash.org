@@ -1,4 +1,4 @@
-* Squash
+* Squash in-language JavaScript SQL
   by [[file:lang][Lang]] [2009-10-29 Thu]
 
   Squash is a JavaScript library for expressing SQL queries using
@@ -15,3 +15,9 @@
   Try [[file:javascript/squash.html][tests running in the browser]], and see the
   [[file:javascript/squash.js][squash code]].
   
+* Refactoring
+** TODO prototype object links, no copying
+** TODO driver object.
+*** TODO close over table
+*** TODO register in env
+*** TODO driver creator
