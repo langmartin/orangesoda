@@ -33,6 +33,9 @@ var squash;
    }
 
    // Interface.
+   var eFrom = new TypeError("Use join to merge queries");
+   var eJoin = new TypeError("Only one join permitted");
+
   function statement (env, prev) {
      this.env = env || {};
      // if (prev) this.prev = prev;
@@ -47,7 +50,7 @@ var squash;
      },
      from: function (table, extra) {
        var self = this._clone(); var env = self.env;
-       if (env.from) throw TypeError("Use join to merge queries");
+       if (env.from) throw eFrom;
        env.from = {table: table, extra: extra};
        return self;
      },
@@ -59,47 +62,31 @@ var squash;
        else env[key] = columns;
        return self;
      },
-     _where: function (col, op, val, tail) {
-       var self = this._clone(); var env = self.env;
-       var old = this.env;
-       tail = tail || function (col, op, val) {
-         return [col, op, val].join(" ");
-       };
+     _where: function (col, op, val, concat) {
+       var self = this._clone(); var env = self.env; var old = this.env;
        var isJoined = old.join; // evaluate this at construction
-       self.env.where = function (driver) {
+       self.env.where = function (driver, clip) {
          var result = [], value;
          var table = (isJoined) ? false : env.from.table;
          var field = driver.field(table, col);
          if (field) {
            value = (typeof val == "function") ? val() : val;
            value = driver.type(table, col, env).tosql(value);
-           result.push(tail(field, op, value, driver));
-           if (old.where) result = result.concat(old.where(driver));
+           result.push(concat(field, op, value, driver));
+           if ((!clip) && old.where) {
+             result = result.concat(old.where(driver));
+           }
          }
          return result;
        };
        return self;
      },
      where: function (col, op, val) {
-       return this._where(col, op, val);
-     },
-     or: function (left0, right0, op) {
-       op = op || " OR ";
-       var self = this._clone(); var env = self.env; var old = this.env;
-       env.where = function (driver) {
-         var result = [];
-         var left = left0.env.where(driver).join(" AND ");
-         var right = right0.env.where(driver).join(" AND ");
-         result.push(
-           ["(", [left, right].join(op), ")"].join('')
-         );
-         if (old.where) result = result.concat(old.where(driver));
-         return result;
-       };
-       return self;
-     },
-     and: function (left, right) {
-       return this.or(left, right, " AND ");
+       return this._where(
+         col, op, val,
+         function (col, op, val) {
+           return [col, op, val].join(" ");
+         });
      },
      wherenotnull: function (col, op, val) {
        return this._where(
@@ -111,17 +98,38 @@ var squash;
      },
      wherein: function (col, op, values) {
        var self = this._clone(); var env = self.env; var old = this.env;
-       env.where = function (driver) {
+       env.where = function (driver, clip) {
          var result = [driver.wherein(env.from.table, col, op, values)];
+         if ((!clip) && old.where) {
+           result = result.concat(old.where(driver));
+         }
+         return result;
+       };
+       return self;
+     },
+     or: function (left, right, op) {
+       var self = this._clone(); var env = self.env; var old = this.env;
+       op = op || " OR ";
+       env.where = function (driver) {
+         var result = [];
+         function clause (where) {
+           return where.env.where(driver, "clip").join(" AND ");
+         }
+         result.push(
+           ["(", [clause(left), clause(right)].join(op), ")"].join('')
+         );
          if (old.where) result = result.concat(old.where(driver));
          return result;
        };
        return self;
      },
+     and: function (left, right) {
+       return this.or(left, right, " AND ");
+     },
      join: function (how, other, handler) {
        var self = this._clone(); var env = self.env;
        how = how || "JOIN";
-       if (env.join) throw TypeError("Only one join permitted");
+       if (env.join) throw eJoin;
        env.join = {how: how, other: other, handler: handler};
        return self;
      },
@@ -355,18 +363,65 @@ squash.tests = function () {
         + " WHERE addr like 'foo%' AND el.name = 'lang'";
     },
     function () {
-      var tmp = baz.wherein("foo", "=", [1, 2, 3]);
-      return "" + tmp ==
+      var zup = baz.wherein("foo", "=", [1, 2, 3]);
+      return "" + zup ==
         "SELECT item.name FROM item WHERE "
         + "item.foo IN ('1', '2', '3')"
         + " AND item.name = 'lang'";
     },
     function () {
-      baz = baz.wherein("foo", "not like", [1, 2, 3]);
-      return "" + baz ==
+      var zup = baz.wherein("foo", "not like", [1, 2, 3]);
+      return "" + zup ==
+        "SELECT item.name FROM item WHERE "
+        + "item.foo NOT LIKE IN ('1', '2', '3')"
+        + " AND item.name = 'lang'";
+    },
+    function () {
+      console.debug("extend");
+      foo = foo.where("test", "=", "test");
+      foo = foo.or(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
+                   foo.where("class", "=", "valu'''e"));
+      return "" + foo ==
         "SELECT item.name FROM item WHERE "
         + "item.foo NOT LIKE IN ('1', '2', '3')"
         + " AND item.name = 'lang'";
     }
   );
 };
+
+     // extend: function (other) {
+     //   var self0 = this._clone(); var self = self0.env;
+     //   other = other.env;
+     //   var key;
+     //   if (other.from) {
+     //     if (self.from) throw eFrom;
+     //     else self.from = other.from;
+     //   }
+     //   if (other.join) {
+     //     if (self.join) throw eJoin;
+     //     else self.join = other.join;
+     //   }
+     //   if (other.where) {
+     //     if (self.where) {
+     //       var where = self.where;
+     //       self.where = function (driver) {
+     //         return [where(driver).join(" AND "),
+     //                 other.where(driver).join(" AND ")].join(" AND ");
+     //       };
+     //     }
+     //     else self.where = other.where;
+     //   }
+     //   if (other.select) {
+     //     if (self.select) {
+     //       self.select = self.select.concat(other.select);
+     //     }
+     //     else self.select = other.select;
+     //   }
+     //   if (other.select_join) {
+     //     if (self.select_join) {
+     //       self.select_join = self.select_join.concat(other.select_join);
+     //     }
+     //     else self.select_join = other.select_join;
+     //   }
+     //   return self0;
+     // },
