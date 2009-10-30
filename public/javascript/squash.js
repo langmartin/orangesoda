@@ -377,51 +377,14 @@ squash.tests = function () {
         + " AND item.name = 'lang'";
     },
     function () {
-      console.debug("extend");
       foo = foo.where("test", "=", "test");
       foo = foo.or(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
                    foo.where("class", "=", "valu'''e"));
       return "" + foo ==
-        "SELECT item.name FROM item WHERE "
-        + "item.foo NOT LIKE IN ('1', '2', '3')"
-        + " AND item.name = 'lang'";
+        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE "
+        + "(fnDocuments.date > '09/27/2009 15:08:09' "
+        + "OR fnDocuments.class = 'valu''''''e') "
+        + "AND fnDocuments.test = 'test'";
     }
   );
 };
-
-     // extend: function (other) {
-     //   var self0 = this._clone(); var self = self0.env;
-     //   other = other.env;
-     //   var key;
-     //   if (other.from) {
-     //     if (self.from) throw eFrom;
-     //     else self.from = other.from;
-     //   }
-     //   if (other.join) {
-     //     if (self.join) throw eJoin;
-     //     else self.join = other.join;
-     //   }
-     //   if (other.where) {
-     //     if (self.where) {
-     //       var where = self.where;
-     //       self.where = function (driver) {
-     //         return [where(driver).join(" AND "),
-     //                 other.where(driver).join(" AND ")].join(" AND ");
-     //       };
-     //     }
-     //     else self.where = other.where;
-     //   }
-     //   if (other.select) {
-     //     if (self.select) {
-     //       self.select = self.select.concat(other.select);
-     //     }
-     //     else self.select = other.select;
-     //   }
-     //   if (other.select_join) {
-     //     if (self.select_join) {
-     //       self.select_join = self.select_join.concat(other.select_join);
-     //     }
-     //     else self.select_join = other.select_join;
-     //   }
-     //   return self0;
-     // },
