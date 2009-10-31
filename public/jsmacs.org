@@ -1,0 +1,25 @@
+* Emacs in Javascript & the DOM
+by [[file:lang.org][Lang]] [2009-10-31 Sat]
+
+Quixotic, embryonic.
+
+* Components
+** Elisp Interpreter
+*** Reader
+**** Sexp
+**** Vector
+**** Quasiquote
+**** Character
+**** Number
+*** Dynamic Scope
+*** Data Types
+*** Elisp Compiler
+"Analyizing Intpreter", I think. Byte compiling is (probably) slower
+than expressing elisp in idomatic javascript. The intepretation
+approach should also be less work.
+
+** Keyboard Capture
+*** Mouse Capture
+
+** Buffers
+*** Colors
