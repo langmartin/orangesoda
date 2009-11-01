@@ -120,7 +120,7 @@ var jsmacs = {
            else str.push(ch);
          }
        }
-       return str.join('');
+       return new String(str.join(''));
      }
 
      function token (ch, cls) {
