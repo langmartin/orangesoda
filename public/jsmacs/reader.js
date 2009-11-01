@@ -1,33 +1,6 @@
-var jsmacs = {
-  elisp: {
-    reader: {},
-    primitive: {}
-  }
-};
+var jsmacs = {elisp: {}};
 
 (function () {
-   var prim = jsmacs.elisp.primitive = {};
-
-   prim.vector = function (el0, el1) {
-     return Array.prototype.slice.call(arguments);
-   };
-   prim["vector-ref"] = function (vec, idx) {
-     return vec[idx];
-   };
-
-   prim.cons = function (car, cdr) {
-     return prim.vector.apply(this, arguments);
-   };
-   prim.car = function (lst) {
-     return lst[0];
-   };
-   prim.cdr = function (lst) {
-     return lst[1];
-   };
-   prim["null?"] = function (obj) {
-     return obj === null;
-   };
-
    var reader = jsmacs.elisp.reader = function (text) {
      var ii = 0;
      function peek () {
@@ -97,8 +70,8 @@ var jsmacs = {
          {symbol: true, number: true}
        );
      }
-       
-     // FIXME only read integers
+
+     // FIXME only reads integers
      function number (head) {
        return parseInt(
          inclusive(head, {number: true}),
@@ -154,21 +127,6 @@ var jsmacs = {
        if (cls == "lend") return null;
        if (cls == "space") return list();
        return [token(ch, cls), list()];
-     }
-
-     //// Lists as vectors for console readability.
-     function fakelist (head) {
-       var vec = [];
-       var ch, cls;
-       while (true) {
-         ch = read();
-         if (ch === false) break;
-         cls = charclass(ch);
-         if (cls == "lend") break;
-         if (cls == "space") continue;
-         vec.push(token(ch, cls));
-       }
-       return vec;
      }
 
      return list();
