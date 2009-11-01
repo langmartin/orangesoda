@@ -138,7 +138,7 @@ var jsmacs = {
        var ch, cls;
        while (true) {
          ch = read();
-         if (ch == false) break;
+         if (ch === false) break;
          cls = charclass(ch);
          if (cls == "vend") break;
          vec.push(token(ch, cls));
