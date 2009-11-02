@@ -1,54 +1,40 @@
 (function () {
-   var text, dispatch = {
-     text: text = function (inp) {
-       return $(inp).val();
-     },
-     "select-one": function (inp) {
-       return $("option[selected]", inp).text();
-     },
-     textarea: text
+   function summarize (cont) {
+     var form = this;
+     var link = $("<a href=\"#\">" + $(form).val() + "</a>");
+     $(form).replaceWith(link);
+     $(link).click(function () {
+                     $(this).unsummarize(form, cont);
+                     return false;
+                   });
+     return link;
    };
 
-   jQuery.fn.summarize = function () {
-     $.each(this, summarize);
+   jQuery.fn.summarize = function (cont) {
+     $.each(this, function () {
+              summarize.call(this, cont);
+            });
+     return this;
    };
 
-   function summarize () {
-     var data = $(this).data("summarize"),
-     form, link, fn;
-
-     if (! data) {
-       data = {};
-       data.form = form = this;
-       $(form).change(function () {
-                        $(this).summarize();
-                        return false;
-                      });
-       fn = data.fn = dispatch[$(this).attr("type")];
-       if (! data.fn) return this;
-       data.link = $("<a href=\"#\">" + fn(form) + "</a>")
-         .click(function () {
-                  $(this).summarize();
-                  return false;
-                });
-       data.state = "form";
-       $(form).data("summarize", data);
-       return $(form).summarize();
-     }
-
-     form = data.form, link = data.link;
-
-     if (data.state == "form") {
-       $(link).html(data.fn(form));
-       $(this).replaceWith(link);
-       data.state = "link";
-       return this;
-     }
-
-     else {
-       $(this).replaceWith(form);
-       data.state = "form";
-       return this;
-     }
+   jQuery.fn.unsummarize = function (form, cont) {
+     var link = this;
+     $(link).replaceWith(form);
+     if (cont) cont.call(form);
+     return this;
    };
  })();
+
+// $(function () {
+//     $("form input, form select").summarize(
+//       function () {
+//         $(this).change(function () {
+//                          $("#save").show();
+//                        });});
+//     var self = $("#save")
+//       .hide()
+//       .click(function () {
+//                $("form input, form select").summarize();
+//                $(self).hide();
+//              });
+//   });

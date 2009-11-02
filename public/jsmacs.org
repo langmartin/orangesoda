@@ -1,0 +1,33 @@
+* Emacs in Javascript & the DOM
+by [[file:lang.org][Lang]] [2009-10-31 Sat]
+
+Quixotic, embryonic. The [[file:jsmacs/test.html][test code]] requires =console.debug=.
+
+* Components
+** Elisp Interpreter
+*** Reader
+**** DONE List
+     CLOSED: [2009-11-01 Sun 14:55]
+
+**** DONE Vector
+     CLOSED: [2009-11-01 Sun 14:55]
+
+**** TODO Symbol
+**** TODO Character
+**** TODO Number
+**** TODO Quasiquote
+
+*** Dynamic Scope
+
+*** Data Types
+
+*** Elisp Compiler
+"Analyizing Intpreter", I think. Byte compiling is (probably) slower
+than expressing elisp in idomatic javascript. The intepretation
+approach should also be less work.
+
+** Keyboard Capture
+*** Mouse Capture
+
+** Buffers
+*** Colors
