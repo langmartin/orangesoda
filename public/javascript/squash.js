@@ -142,6 +142,11 @@ var squash;
        env.driver = driver;
        return self;
      },
+     filter: function (filter) {
+       var self = this._clone(); var env = self.env;
+       env.filter = filter;
+       return self;
+     },
      eachfield: function (proc) {
        function lp (cols, tab) {
          for (var ii=0; ii<cols.length; ii++) proc(ii, cols[ii], tab);
