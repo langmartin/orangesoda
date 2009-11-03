@@ -54,9 +54,10 @@ var squash;
        env.from = {table: table, extra: extra};
        return self;
      },
-     select: function (columns) {
+     select: function (columns, distinct) {
        if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
+       if (distinct) env.distinct = true;
        var key = (env.join) ? "select_join" : "select";
        if (env[key]) env[key] = env[key].concat(columns);
        else env[key] = columns;
@@ -178,7 +179,9 @@ var squash;
               col = driver.field(tab, field);
               if (col) tmp.push(col);
           });
-        result.push("SELECT", tmp.join(", "));
+        result.push("SELECT");
+        if (env.distinct) result.push("DISTINCT");
+        result.push(tmp.join(", "));
       })();
 
      // JOIN || FROM
@@ -235,11 +238,11 @@ var squash;
        toval: toval
      };
    };
-
-   function sqlstring (val) {
+   squash.util = {};
+   squash.util.sqlstring = function sqlstring (val) {
      val += "";
      return ["'", val.replace(/\'/g, "''"), "'"].join('');
-   }
+   };
 
    def("string",
        sqlstring,
