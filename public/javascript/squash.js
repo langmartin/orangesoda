@@ -63,6 +63,12 @@ var squash;
        else env[key] = columns;
        return self;
      },
+     count: function () {
+       var self = this._clone(); var env = self.env;
+       delete env.select;
+       env.select_join = ["COUNT(*)"];
+       return self;
+     },
      _where: function (col, op, val, concat) {
        var self = this._clone(); var env = self.env; var old = this.env;
        var isJoined = old.join; // evaluate this at construction
@@ -96,6 +102,20 @@ var squash;
            col = ["ISNULL(", col, ", '')"].join('');
            return [col, op, val].join(" ");
          });
+     },
+     wherecol: function (col, op, col2) {
+       var self = this._clone(); var env = self.env;
+       var isJoined = env.join;
+       var prev = env.where;
+       env.where = function (driver, clip) {
+         var table = (isJoined) ? false : env.from.table;
+         var result = [
+           [driver.field(table, col), op, driver.field(table, col2)].join(" ")
+         ];
+         if ((!clip) && prev) result = result.concat(prev(driver));
+         return result;
+       };
+       return self;
      },
      wherein: function (col, op, values) {
        var self = this._clone(); var env = self.env; var old = this.env;
@@ -245,7 +265,8 @@ var squash;
      };
    };
    squash.util = {};
-   squash.util.sqlstring = function sqlstring (val) {
+   squash.util.sqlstring = sqlstring;
+   function sqlstring (val) {
      val += "";
      return ["'", val.replace(/\'/g, "''"), "'"].join('');
    };
@@ -403,6 +424,11 @@ squash.tests = function () {
         + "(fnDocuments.date > '09/27/2009 15:08:09' "
         + "AND fnDocuments.class = 'valu''''''e') "
         + "AND fnDocuments.test = 'test'";
+    },
+    function () {
+      foo = new squash("test").count().wherecol("a", "=", "b");
+      return "" + foo == 
+        "SELECT COUNT(*) FROM test WHERE test.a = test.b";
     }
   );
 };
