@@ -40,7 +40,7 @@ var squash;
      this.env = env || {};
      // if (prev) this.prev = prev;
    };
-   statement.prototype = {
+   squash.fn = statement.prototype = {
      _clone: function () {
        var self = new statement();
        for (var key in this.env) {
@@ -145,7 +145,13 @@ var squash;
      },
      filter: function (filter) {
        var self = this._clone(); var env = self.env;
-       env.filter = filter;
+       var prev = env.filter || false;
+       if (prev) {
+         env.filter = function (rec) {
+           return filter(prev(rec));
+         };
+       }
+       else env.filter = filter;
        return self;
      },
      eachfield: function (proc) {
