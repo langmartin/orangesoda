@@ -54,20 +54,26 @@ var squash;
        env.from = {table: table, extra: extra};
        return self;
      },
-     select: function (columns, distinct) {
+     select: function (columns) {
        if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
-       if (distinct) env.distinct = true;
        var key = (env.join) ? "select_join" : "select";
        if (env[key]) env[key] = env[key].concat(columns);
        else env[key] = columns;
        return self;
      },
-     count: function () {
+     _select_opts: function (opt) {
        var self = this._clone(); var env = self.env;
-       delete env.select;
-       env.select_join = ["COUNT(*)"];
+       var keys = env.select_opts || [];
+       keys.push(opt);
+       env.select_opts = keys;
        return self;
+     },
+     count: function (opt) {
+       return this._select_opts("COUNT");
+     },
+     distinct: function (opt) {
+       return this._select_opts("DISTINCT");
      },
      _where: function (col, op, val, concat) {
        var self = this._clone(); var env = self.env; var old = this.env;
@@ -205,9 +211,19 @@ var squash;
               col = driver.field(tab, field);
               if (col) tmp.push(col);
           });
-        result.push("SELECT");
-        if (env.distinct) result.push("DISTINCT");
-        result.push(tmp.join(", "));
+        var select = ["SELECT "];
+        if (env.select_opts) {
+          for (var key=0; key < env.select_opts.length; key++) {
+            select.push(env.select_opts[key] + "(");
+          }
+        }
+        select.push(tmp.join(", "));
+        if (env.select_opts) {
+          for (key=0; key < env.select_opts.length; key++) {
+            select.push(")");
+          }
+        }
+        result.push(select.join(''));
       })();
 
      // JOIN || FROM
@@ -426,9 +442,9 @@ squash.tests = function () {
         + "AND fnDocuments.test = 'test'";
     },
     function () {
-      foo = new squash("test").count().wherecol("a", "=", "b");
+      foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
       return "" + foo == 
-        "SELECT COUNT(*) FROM test WHERE test.a = test.b";
+        "SELECT COUNT(DISTINCT(test.test, test.t2)) FROM test WHERE test.a = test.b";
     }
   );
 };
