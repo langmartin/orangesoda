@@ -164,6 +164,18 @@ var squash;
        env.join = {how: how, other: other, handler: handler};
        return self;
      },
+     orderby: function (col, mod) {
+       mod = mod || "orderby";
+       var self = this._clone(); var env = self.env;
+       env.modifier = env.modifier || [];
+       env.modifier.push(function (driver) {
+                           return driver[mod](env.from.table, col);
+                         });
+       return self;
+     },
+     groupby: function (col) {
+       return this.orderby(col, "groupby");
+     },
      driver: function (driver) {
        var self = this._clone(); var env = self.env;
        env.driver = driver;
@@ -269,6 +281,15 @@ var squash;
         result.push(tmp.join(" AND "));
       })();
 
+     // ORDER BY & GROUP BY
+     (function () {
+        if (env.modifier) {
+          for (var ii=0; ii < env.modifier.length; ii++) {
+            result.push(env.modifier[ii](driver));
+          }
+        }
+      })();
+
      return result.join(" ");
    };
 
@@ -339,6 +360,12 @@ var squash;
          "not like" : " NOT LIKE IN "
        };
        return [field, operations[op], "(", values.join(", "), ")"].join('');
+     },
+     orderby: function (tab, col) {
+       return "ORDER BY " + this.field(tab, col);
+     },
+     groupby: function (tab, col) {
+       return "GROUP BY " + this.field(tab, col);
      }
    };
  })();
@@ -442,9 +469,14 @@ squash.tests = function () {
         + "AND fnDocuments.test = 'test'";
     },
     function () {
-      foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
+      var foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
       return "" + foo == 
         "SELECT COUNT(DISTINCT(test.test, test.t2)) FROM test WHERE test.a = test.b";
+    },
+    function () {
+      foo = new squash("test").select("test").orderby("test").where("foo", "=", 1);
+      return "" + foo == 
+        "SELECT test.test FROM test WHERE test.foo = '1' ORDER BY test.test";
     }
   );
 };
