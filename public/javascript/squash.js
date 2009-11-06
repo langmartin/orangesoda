@@ -167,9 +167,10 @@ var squash;
      orderby: function (col, mod) {
        mod = mod || "orderby";
        var self = this._clone(); var env = self.env;
+       var tab = (env.join) ? false : env.from.table;
        env.modifier = env.modifier || [];
        env.modifier.push(function (driver) {
-                           return driver[mod](env.from.table, col);
+                           return driver[mod](tab, col);
                          });
        return self;
      },
