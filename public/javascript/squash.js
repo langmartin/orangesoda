@@ -64,16 +64,16 @@ var squash;
      },
      _select_opts: function (opt) {
        var self = this._clone(); var env = self.env;
-       var keys = env.select_opts || [];
-       keys.push(opt);
+       var keys = env.select_opts || {};
+       keys[opt] = true;
        env.select_opts = keys;
        return self;
      },
      count: function (opt) {
-       return this._select_opts("COUNT");
+       return this._select_opts("count");
      },
      distinct: function (opt) {
-       return this._select_opts("DISTINCT");
+       return this._select_opts("distinct");
      },
      _where: function (col, op, val, concat) {
        var self = this._clone(); var env = self.env; var old = this.env;
@@ -224,17 +224,21 @@ var squash;
               col = driver.field(tab, field);
               if (col) tmp.push(col);
           });
-        var select = ["SELECT "];
+        var select = ["SELECT "]; var key;
         if (env.select_opts) {
-          for (var key=0; key < env.select_opts.length; key++) {
-            select.push(env.select_opts[key] + "(");
+          if (env.select_opts.count) {
+            for (key in env.select_opts) select.push(key.toUpperCase() + "(");
+          }
+          else if (env.select_opts.distinct) {
+            select.push("DISTINCT ");
+          }
+          select.push(tmp.join(", "));
+          if (env.select_opts.count) {
+            for (key in env.select_opts) select.push(")");
           }
         }
-        select.push(tmp.join(", "));
-        if (env.select_opts) {
-          for (key=0; key < env.select_opts.length; key++) {
-            select.push(")");
-          }
+        else {
+          select.push(tmp.join(", "));
         }
         result.push(select.join(''));
       })();
@@ -470,14 +474,14 @@ squash.tests = function () {
         + "AND fnDocuments.test = 'test'";
     },
     function () {
-      var foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
+      foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
       return "" + foo == 
         "SELECT COUNT(DISTINCT(test.test, test.t2)) FROM test WHERE test.a = test.b";
     },
     function () {
-      foo = new squash("test").select("test").orderby("test").where("foo", "=", 1);
+      foo = new squash("test").select("test").orderby("test").where("foo", "=", 1).distinct();
       return "" + foo == 
-        "SELECT test.test FROM test WHERE test.foo = '1' ORDER BY test.test";
+        "SELECT DISTINCT test.test FROM test WHERE test.foo = '1' ORDER BY test.test";
     }
   );
 };
