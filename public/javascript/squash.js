@@ -1,16 +1,13 @@
 var squash;
 
 (function () {
+   // Utilities
    var slice = Array.prototype.slice;
    var end = null;
    var eRequired = new RangeError("Required statement missing.");
+   var eFrom = new TypeError("Use join to merge queries");
+   var eJoin = new TypeError("Only one join permitted");
 
-   squash = function (table, extra) {
-     var self = new statement();
-     return self.from(table, extra);
-   };
-
-   // Support Functions.
    function identity (x) {
      return x;
    }
@@ -33,95 +30,61 @@ var squash;
    }
 
    // Interface.
-   var eFrom = new TypeError("Use join to merge queries");
-   var eJoin = new TypeError("Only one join permitted");
-
-  function statement (env, prev) {
-     this.env = env || {};
-     // if (prev) this.prev = prev;
+   squash = function (table, extra) {
+     var self = new statement();
+     self.from(table, extra);
+     return self;
    };
-   squash.fn = statement.prototype = {
-     _clone: function () {
-       var self = new statement();
-       for (var key in this.env) {
-         self.env[key] = this.env[key];
-       }
-       return self;
-     },
-     from: function (table, extra) {
-       var self = this._clone(); var env = self.env;
-       if (env.from) throw eFrom;
-       env.from = {table: table, extra: extra};
-       return self;
+
+   // Internal.
+   function source (table, extra, tag) {
+     this.env = {
+       table: table,
+       tableopts: extra,
+       from: tag
+     };
+   }
+
+   source.prototype = {
+     _select: function (key, columns) {
+       var env = this.env;
+       if (isArray(columns[0])) columns = columns[0];
+       else columns = slice.call(columns);
+       var from = env.from || "unspecified";
+       env.select[from] = columns;
+       return this;
      },
      select: function (columns) {
-       if (!isArray(columns)) columns = slice.call(arguments);
-       var self = this._clone(); var env = self.env;
-       var key = (env.join) ? "select_join" : "select";
-       if (env[key]) env[key] = env[key].concat(columns);
-       else env[key] = columns;
-       return self;
+       return this._select("select", arguments);
      },
-     _select_opts: function (opt) {
-       var self = this._clone(); var env = self.env;
-       var keys = env.select_opts || {};
-       keys[opt] = true;
-       env.select_opts = keys;
-       return self;
+     count: function (columns) {
+       return this._select("count", arguments);
      },
-     count: function (opt) {
-       return this._select_opts("count");
+     distinct: function (columns) {
+       return this._select("distinct", arguments);
      },
-     distinct: function (opt) {
-       return this._select_opts("distinct");
-     },
-     _where: function (col, op, val, concat) {
-       var self = this._clone(); var env = self.env; var old = this.env;
-       var isJoined = old.join; // evaluate this at construction
-       self.env.where = function (driver, clip) {
-         var result = [], value;
-         var table = (isJoined) ? false : env.from.table;
-         var field = driver.field(table, col);
-         if (field) {
-           value = (typeof val == "function") ? val() : val;
-           value = driver.type(table, col, env).tosql(value);
-           result.push(concat(field, op, value, driver));
-           if ((!clip) && old.where) {
-             result = result.concat(old.where(driver));
-           }
+     _where: function (column, operator, value) {
+       var env = this.env;
+       var tail = this.env.where;
+       env.where = function (driver, clip) {
+         driver.from = env.from;
+         var result = [];
+         result.push(driver.where(column, operator, value));
+         if ((!clip) && tail) {
+           result.concat(tail.call(this));
          }
          return result;
        };
-       return self;
+       return this;
      },
      where: function (col, op, val) {
-       return this._where(
-         col, op, val,
-         function (col, op, val) {
-           return [col, op, val].join(" ");
-         });
+       return this._where("where", col, op, val);
      },
      wherenotnull: function (col, op, val) {
-       return this._where(
-         col, op, val,
-         function (col, op, val) {
-           col = ["ISNULL(", col, ", '')"].join('');
-           return [col, op, val].join(" ");
-         });
+       return this._where("wherenotnull", col, op, val);
      },
-     wherecol: function (col, op, col2) {
-       var self = this._clone(); var env = self.env;
-       var isJoined = env.join;
-       var prev = env.where;
-       env.where = function (driver, clip) {
-         var table = (isJoined) ? false : env.from.table;
-         var result = [
-           [driver.field(table, col), op, driver.field(table, col2)].join(" ")
-         ];
-         if ((!clip) && prev) result = result.concat(prev(driver));
-         return result;
-       };
-       return self;
+     condition: function (col, op, col2) {
+       return this._where("condition", col, op, val);
      },
      wherein: function (col, op, values) {
        var self = this._clone(); var env = self.env; var old = this.env;
@@ -157,13 +120,6 @@ var squash;
      and: function (left, right) {
        return this.or(left, right, " AND ");
      },
-     join: function (how, other, handler) {
-       var self = this._clone(); var env = self.env;
-       how = how || "JOIN";
-       if (env.join) throw eJoin;
-       env.join = {how: how, other: other, handler: handler};
-       return self;
-     },
      orderby: function (col, mod) {
        mod = mod || "orderby";
        var self = this._clone(); var env = self.env;
@@ -176,6 +132,38 @@ var squash;
      },
      groupby: function (col) {
        return this.orderby(col, "groupby");
+     }
+   };
+
+   function statement () {
+     this.counter = 1;
+     this.table = {};
+     this.current = "";
+   };
+
+   squash.fn = statement.prototype = {
+     copy: function () {
+       var self = new statement();
+       for (var key in this.env) {
+         self.env[key] = this.env[key];
+       }
+       return self;
+     },
+     from: function (table, tag, extra) {
+       if (! tag) {
+         tag = "t" + this.counter;
+         this.counter = this.counter + 1;
+       }
+       var self = new table(table, extra, tag);
+       this.table[tag] = self;
+       return this;
+     },
+     join: function (how, other, handler) {
+       var self = this._clone(); var env = self.env;
+       how = how || "JOIN";
+       if (env.join) throw eJoin;
+       env.join = {how: how, other: other, handler: handler};
+       return self;
      },
      driver: function (driver) {
        var self = this._clone(); var env = self.env;
@@ -344,9 +332,13 @@ var squash;
    }
 
    //// Default Driver
-   squash.default_driver = function () {};
+   squash.default_driver = function () {
+     this.squash = null;
+     this.from = null;
+   };
    squash.default_driver.prototype = {
-     field: function (tab, field) {
+     field: function (field) {
+       var tab = this.squash.env.from;
        if (! tab) return field;
        return [tab, field].join(".");
      },
@@ -354,8 +346,14 @@ var squash;
        var key = squash.type[field] || "string";
        return squash.type_defs[key];
      },
-     wherein: function (tab, field, op, values) {
-       field = this.field(tab, field);
+     where: function (col, op, val) {
+       return [this.field(col), op, this.tosql(val)].join(' ');
+     },
+     wherenotnull: function (col, op, val) {
+       return this.where(col, op, val);
+     },
+     wherein: function (field, op, values) {
+       field = this.field(field);
        values = map(values, this.type("", field).tosql);
        op = op.toLowerCase();
        var operations = {
@@ -475,12 +473,12 @@ squash.tests = function () {
     },
     function () {
       foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
-      return "" + foo == 
+      return "" + foo ==
         "SELECT COUNT(DISTINCT(test.test, test.t2)) FROM test WHERE test.a = test.b";
     },
     function () {
       foo = new squash("test").select("test").orderby("test").where("foo", "=", 1).distinct();
-      return "" + foo == 
+      return "" + foo ==
         "SELECT DISTINCT test.test FROM test WHERE test.foo = '1' ORDER BY test.test";
     }
   );
