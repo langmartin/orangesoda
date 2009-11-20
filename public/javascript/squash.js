@@ -20,6 +20,12 @@ var squash;
      return ((typeof obj == "object") && (obj.length !== undefined));
    }
 
+   function eachobj (obj, proc) {
+     for (var key in obj) {
+       if (proc(key, obj[key]) === false); break;
+     }
+   }
+
    function map (arr, proc) {
      var result = [];
      for (var ii = 0; ii < arr.length; ii++) {
@@ -31,115 +37,29 @@ var squash;
 
    // Interface.
    squash = function (table, extra) {
-     var self = new statement();
-     self.from(table, extra);
+     if (extra) table += " " + extra;
+     var self = new statement(table);
      return self;
    };
 
+   function join (type, left, right, handler) {
+     while (left.env.id == right.env.id) right.env.id = right.env.id + 1;
+     var self = new statement(
+       [left.table, type, right.table].join(' ')
+     );
+     self.env.id = left.env.id + right.env.id;
+   };
+
+   squash.join = function (lf, rt, fn) {
+     return join("INNER JOIN", lf, rt, fn);
+   };
+
    // Internal.
-   function source (table, extra, tag) {
-     this.env = {
-       table: table,
-       tableopts: extra,
-       from: tag
-     };
+   function statement (table) {
+     this.env = {};
+     this.env.table = table;
+     this.env.id = 1;
    }
-
-   source.prototype = {
-     _select: function (key, columns) {
-       var env = this.env;
-       if (isArray(columns[0])) columns = columns[0];
-       else columns = slice.call(columns);
-       var from = env.from || "unspecified";
-       env.select[from] = columns;
-       return this;
-     },
-     select: function (columns) {
-       return this._select("select", arguments);
-     },
-     count: function (columns) {
-       return this._select("count", arguments);
-     },
-     distinct: function (columns) {
-       return this._select("distinct", arguments);
-     },
-     _where: function (column, operator, value) {
-       var env = this.env;
-       var tail = this.env.where;
-       env.where = function (driver, clip) {
-         driver.from = env.from;
-         var result = [];
-         result.push(driver.where(column, operator, value));
-         if ((!clip) && tail) {
-           result.concat(tail.call(this));
-         }
-         return result;
-       };
-       return this;
-     },
-     where: function (col, op, val) {
-       return this._where("where", col, op, val);
-     },
-     wherenotnull: function (col, op, val) {
-       return this._where("wherenotnull", col, op, val);
-     },
-     condition: function (col, op, col2) {
-       return this._where("condition", col, op, val);
-     },
-     wherein: function (col, op, values) {
-       var self = this._clone(); var env = self.env; var old = this.env;
-       env.where = function (driver, clip) {
-         var result = [driver.wherein(env.from.table, col, op, values)];
-         if ((!clip) && old.where) {
-           result = result.concat(old.where(driver));
-         }
-         return result;
-       };
-       return self;
-     },
-     or: function (left, right, op) {
-       var self = this._clone(); var env = self.env; var old = this.env;
-       op = op || " OR ";
-       env.where = function (driver, clip) {
-         var result = [];
-         function clause (where) {
-           var arr = where.env.where(driver, "clip");
-           if (arr.length == 1) return arr[0];
-           return ["(", arr.join(" AND "), ")"].join('');
-         }
-         result.push(
-           ["(", [clause(left), clause(right)].join(op), ")"].join('')
-         );
-         if ((!clip) && old.where) {
-           result = result.concat(old.where(driver));
-         }
-         return result;
-       };
-       return self;
-     },
-     and: function (left, right) {
-       return this.or(left, right, " AND ");
-     },
-     orderby: function (col, mod) {
-       mod = mod || "orderby";
-       var self = this._clone(); var env = self.env;
-       var tab = (env.join) ? false : env.from.table;
-       env.modifier = env.modifier || [];
-       env.modifier.push(function (driver) {
-                           return driver[mod](tab, col);
-                         });
-       return self;
-     },
-     groupby: function (col) {
-       return this.orderby(col, "groupby");
-     }
-   };
-
-   function statement () {
-     this.counter = 1;
-     this.table = {};
-     this.current = "";
-   };
 
    squash.fn = statement.prototype = {
      copy: function () {
@@ -149,29 +69,13 @@ var squash;
        }
        return self;
      },
-     from: function (table, tag, extra) {
-       if (! tag) {
-         tag = "t" + this.counter;
-         this.counter = this.counter + 1;
-       }
-       var self = new table(table, extra, tag);
-       this.table[tag] = self;
+     driver: function (driver) {
+       var env = this.env;
+       env.driver = driver;
        return this;
      },
-     join: function (how, other, handler) {
-       var self = this._clone(); var env = self.env;
-       how = how || "JOIN";
-       if (env.join) throw eJoin;
-       env.join = {how: how, other: other, handler: handler};
-       return self;
-     },
-     driver: function (driver) {
-       var self = this._clone(); var env = self.env;
-       env.driver = driver;
-       return self;
-     },
      filter: function (filter) {
-       var self = this._clone(); var env = self.env;
+       var env = this.env;
        var prev = env.filter || false;
        if (prev) {
          env.filter = function (rec) {
@@ -179,22 +83,62 @@ var squash;
          };
        }
        else env.filter = filter;
-       return self;
+       return this;
+     },
+     eachclause: function (proc) {
+       var env = this.env;
+       if (env.left) env.left.eachclause(proc);
+       if (env.right) env.right.eachclause(proc);
+       proc(env);
      },
      eachfield: function (proc) {
-       function lp (cols, tab) {
-         for (var ii=0; ii<cols.length; ii++) proc(ii, cols[ii], tab);
-       }
-       var cols;
-       if ((cols = this.env.select)) lp(this.env.select, this.env.from.table);
-       if ((cols = this.env.select_join)) lp(cols);
-       if (this.env.join) {
-         var other = this.env.join.other.env;
-         if ((cols = other.select)) lp(cols, other.from.table);
-         if ((cols = other.select_join)) lp(cols);
-       }
+       eachclause(
+         function (env) {
+           for (var ii=0; ii<env.select.length; ii++) {
+             if (proc(ii, env.select[ii]) === false) break;
+           }
+         });
      }
    };
+
+   function select (self, key, columns) {
+     var env = self.env;
+     if (isArray(columns[0])) columns = columns[0];
+     else columns = slice.call(columns);
+     env[key] = columns;
+     return self;
+   }
+
+   eachobj(
+     {select:1, count:1, distinct:1, groupby:1, orderby:1},
+     function (key) {
+       source.prototype[key] = function (columns) {
+         return select(this, key, arguments);
+       };
+     });
+
+   function where (self, name, column, operator, value) {
+     var env = self.env;
+     var tail = self.env.where;
+     env.where = function (driver, clip) {
+       driver.from = env.from;
+       var result = [];
+       result.push(driver[name](column, operator, value));
+       if ((!clip) && tail) {
+         result.concat(tail.call(self));
+       }
+       return result;
+     };
+     return self;
+   }
+
+   eachobj(
+     {where:1, wherenotnull:1, condition:1, wherein:1, or:1, and:1},
+     function (key) {
+       source.prototype[key] = function (col, op, val) {
+         return where(this, key, col, op, val);
+       };
+     });
 
    // Export.
    statement.prototype.toString = function (driver) {
@@ -282,10 +226,12 @@ var squash;
           }
         }
       })();
-
      return result.join(" ");
    };
+ })();
 
+
+(function () {
    //// Type Definitions
    squash.type_defs = {};
    var def = squash.type_def = function (notation, tosql, toval) {
@@ -332,7 +278,7 @@ var squash;
    }
 
    //// Default Driver
-   squash.default_driver = function () {
+   squash.sqldriver = function () {
      this.squash = null;
      this.from = null;
    };
@@ -364,6 +310,20 @@ var squash;
        };
        return [field, operations[op], "(", values.join(", "), ")"].join('');
      },
+     _or: function (op, left, right) {
+       function clause (where) {
+         var arr = where.env.where(driver, "clip");
+         if (arr.length == 1) return arr[0];
+         return ["(", arr.join(" AND "), ")"].join('');
+       }
+       return ["(", [clause(left), clause(right)].join(op), ")"].join('');
+     },
+     or: function (left, right) {
+       return this._or(" OR ", left, right);
+     },
+     and: function (left, right) {
+       return this._and(" AND ", left, right);
+     },
      orderby: function (tab, col) {
        return "ORDER BY " + this.field(tab, col);
      },
@@ -371,7 +331,7 @@ var squash;
        return "GROUP BY " + this.field(tab, col);
      }
    };
- })();
+})();
 
 squash.tests = function () {
   function assert (thunk0, thunk1) {
@@ -406,6 +366,14 @@ squash.tests = function () {
     "INNER JOIN", zup, function (where, item, ver) {
       return where(item("name"), "=", ver("name"));
     });
+
+  // Syntax I like:
+  // var filenet = new squash.driver.sql();
+  // filenet.execute = function () {};
+  // filenet.definetype("ddsDate", fn, fn);
+  // var tra = new filenet("fnDocuments", dds.schema.transmittal);
+  // tra = tra.where("Document Class", "=", dds.schema.transmittalClass);
+  // tra.where("foo", "=", "bar").execute();
 
   assert(
     function () {
