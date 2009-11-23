@@ -498,12 +498,12 @@ squash.tests = function () {
     },
     function () {
       foo = squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
-      return "" + foo == 
+      return "" + foo ==
         "SELECT COUNT(DISTINCT(t1.test, t1.t2)) FROM test AS t1 WHERE t1.a = t1.b";
     },
     function () {
       foo = squash("test").select("test").orderby("test").where("foo", "=", 1).distinct();
-      return "" + foo == 
+      return "" + foo ==
         "SELECT DISTINCT t1.test FROM test AS t1 WHERE t1.foo = '1' ORDER BY t1.test";
     },
     function () {
