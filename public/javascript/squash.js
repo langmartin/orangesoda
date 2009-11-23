@@ -67,7 +67,14 @@ var squash;
        env.id = counter(0);
        return self;
      },
-     _table: function () { return "t" + this.env.id("eject"); },
+     _table: function (required) {
+       var id = this.env.id;
+       if (required) {
+         if (! id) return this.env.join.right._table(required);
+       }
+       if (! id) return false;
+       return "t" + id("eject");
+     },
      select: function (columns) {
        if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
@@ -167,15 +174,14 @@ var squash;
      and: function (left, right) {
        return this.or(left, right, " AND ");
      },
-     join: function (how, other, handler) {
+     join: function (how, right, handler) {
        var self = new statement();
-       other = other._clone();
+       right = right._clone();
        how = how || "INNER JOIN";
-       self.env.join = {left: this, how: how, right: other,
+       self.env.join = {left: this, how: how, right: right,
                         handler: handler};
        var id = (this.env.join) ? this.env.join.right.env.id : this.env.id;
-       other.env.id = id();
-       self.env.id = id;
+       right.env.id = id();
        return self;
      },
      orderby: function (col, mod) {
@@ -278,16 +284,16 @@ var squash;
              tmp = tmp.concat(slice.call(arguments));
            },
            function (field) {
-             return driver.field(env.join.left._table(), field);
+             return driver.field(env.join.left._table(true), field);
            },
            function (field) {
-             return driver.field(env.join.right._table(), field);
+             return driver.field(env.join.right._table(true), field);
            }
          );
        } else {
          tmp.push(self.env.from.table);
-         if (self.env.from.extra) tmp.push(self.env.from.extra);
          tmp.push("AS", self._table());
+         if (self.env.from.extra) tmp.push(self.env.from.extra);
        }
        return tmp.join(" ");
      }
@@ -468,9 +474,9 @@ squash.tests = function () {
                       });
       tonk = tonk.select("addr").where("addr", "like", "foo%");
       return "" + tonk ==
-        "SELECT t1.addr, t1.name FROM el with (NO LOCK) AS t1"
-        + " INNER JOIN mv with (NO LOCK) AS t2 ON t1.name = t2.name"
-        + " WHERE t1.addr like 'foo%' AND t1.name = 'lang'";
+        "SELECT addr, t1.name FROM el AS t1 with (NO LOCK)"
+        + " INNER JOIN mv AS t2 with (NO LOCK) ON t1.name = t2.name"
+        + " WHERE addr like 'foo%' AND t1.name = 'lang'";
     },
     function () {
       zup = baz.wherein("foo", "=", [1, 2, 3]);
@@ -525,7 +531,7 @@ squash.tests = function () {
       return "" + foo ==
         "SELECT t1.test, t2.bar, t3.bar FROM test AS t1 "
         + "INNER JOIN test AS t2 ON t1.id = t2.id2 "
-        + "INNER JOIN bar AS t3 ON t1.id = t3.id "
+        + "INNER JOIN bar AS t3 ON t2.id = t3.id "
         + "WHERE t1.foo = '1' AND t2.baz = '1' AND t3.bar = 'foo'";
     }
   );
