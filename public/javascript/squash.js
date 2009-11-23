@@ -62,7 +62,7 @@ var squash;
        env.id = counter(0);
        return self;
      },
-     _from: function () { return "t" + this.env.id("eject"); },
+     _table: function () { return "t" + this.env.id("eject"); },
      select: function (columns) {
        if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
@@ -85,17 +85,15 @@ var squash;
      },
      _where: function (col, op, val, concat) {
        var self = this._clone(); var env = self.env; var old = this.env;
-       var isJoined = old.join; // evaluate this at construction
-       self.env.where = function (driver, clip) {
+       self.env.where = function (driver, table, clip) {
          var result = [], value;
-         var table = (isJoined) ? false : env.from.table;
          var field = driver.field(table, col);
          if (field) {
            value = (typeof val == "function") ? val() : val;
            value = driver.type(table, col, env).tosql(value);
            result.push(concat(field, op, value, driver));
            if ((!clip) && old.where) {
-             result = result.concat(old.where(driver));
+             result = result.concat(old.where(driver, table));
            }
          }
          return result;
@@ -121,22 +119,21 @@ var squash;
        var self = this._clone(); var env = self.env;
        var isJoined = env.join;
        var prev = env.where;
-       env.where = function (driver, clip) {
-         var table = (isJoined) ? false : env.from.table;
+       env.where = function (driver, table, clip) {
          var result = [
            [driver.field(table, col), op, driver.field(table, col2)].join(" ")
          ];
-         if ((!clip) && prev) result = result.concat(prev(driver));
+         if ((!clip) && prev) result = result.concat(prev(driver, table));
          return result;
        };
        return self;
      },
      wherein: function (col, op, values) {
        var self = this._clone(); var env = self.env; var old = this.env;
-       env.where = function (driver, clip) {
-         var result = [driver.wherein(env.from.table, col, op, values)];
+       env.where = function (driver, table, clip) {
+         var result = [driver.wherein(table, col, op, values)];
          if ((!clip) && old.where) {
-           result = result.concat(old.where(driver));
+           result = result.concat(old.where(driver, table));
          }
          return result;
        };
@@ -145,10 +142,10 @@ var squash;
      or: function (left, right, op) {
        var self = this._clone(); var env = self.env; var old = this.env;
        op = op || " OR ";
-       env.where = function (driver, clip) {
+       env.where = function (driver, table, clip) {
          var result = [];
          function clause (where) {
-           var arr = where.env.where(driver, "clip");
+           var arr = where.env.where(driver, table, "clip");
            if (arr.length == 1) return arr[0];
            return ["(", arr.join(" AND "), ")"].join('');
          }
@@ -156,7 +153,7 @@ var squash;
            ["(", [clause(left), clause(right)].join(op), ")"].join('')
          );
          if ((!clip) && old.where) {
-           result = result.concat(old.where(driver));
+           result = result.concat(old.where(driver, table));
          }
          return result;
        };
@@ -171,14 +168,15 @@ var squash;
        how = how || "INNER JOIN";
        self.env.join = {left: this, how: how, right: other,
                         handler: handler};
-       other.env.id = this.env.id();
-       self.env.id = other.env.id();
+       var id = (this.env.join) ? this.env.join.right.env.id : this.env.id;
+       other.env.id = id();
+       self.env.id = id;
        return self;
      },
      orderby: function (col, mod) {
        mod = mod || "orderby";
        var self = this._clone(); var env = self.env;
-       var tab = self._from();
+       var tab = self._table();
        env.modifier = env.modifier || [];
        env.modifier.push(function (driver) {
                            return driver[mod](tab, col);
@@ -204,18 +202,25 @@ var squash;
        else env.filter = filter;
        return self;
      },
+     eachstatement: function (proc) {
+       function lp (self) {
+         proc(self);
+         if (self.env.join) {
+           lp(self.env.join.left);
+           lp(self.env.join.right);
+         }
+       }
+       lp(this);
+     },
      eachfield: function (proc) {
-       function lp (cols, tab) {
-         for (var ii=0; ii<cols.length; ii++) proc(ii, cols[ii], tab);
-       }
-       var cols;
-       if ((cols = this.env.select)) lp(this.env.select, this._from());
-       if (this.env.join) {
-         var set = this.env.join.left;
-         if (set.env.select) lp(set.env.select, set._from());
-         set = this.env.join.right;
-         if (set.env.select) lp(set.env.select, set._from());
-       }
+       this.eachstatement(
+         function (self) {
+           var cols = self.env.select;
+           if (!cols) return;
+           for (var ii=0; ii < cols.length; ii++) {
+             proc(ii, cols[ii], self._table());
+           }
+         });
      }
    };
 
@@ -255,47 +260,50 @@ var squash;
       })();
 
      // JOIN || FROM
+     function from (self) {
+       var tmp = [];
+       var env = self.env;
+       if (env.join) {
+         tmp.push(from(env.join.left));
+         tmp.push(env.join.how);
+         tmp.push(from(env.join.right));
+         env.join.handler(
+           function (arg0, arg1) {
+             tmp.push("ON");
+             tmp = tmp.concat(slice.call(arguments));
+           },
+           function (field) {
+             return driver.field(env.join.left._table(), field);
+           },
+           function (field) {
+             return driver.field(env.join.right._table(), field);
+           }
+         );
+       } else {
+         tmp.push(self.env.from.table);
+         if (self.env.from.extra) tmp.push(self.env.from.extra);
+         tmp.push("AS", self._table());
+       }
+       return tmp.join(" ");
+     }
+
      (function () {
-        var tmp = [];
-        function table (self) {
-          var env = self.env;
-          tmp.push(env.from.table);
-          if (env.from.extra) tmp.push(env.from.extra);
-          tmp.push("AS", self._from());
-        }
         result.push("FROM");
-        if (env.join) {
-          table(env.join.left);
-          tmp.push(env.join.how);
-          table(env.join.right);
-          env.join.handler(
-            function (arg0, arg1) {
-              tmp.push("ON");
-              tmp = tmp.concat(slice.call(arguments));
-            },
-            function (field) {
-              return driver.field(env.join.left._from(), field);
-            },
-            function (field) {
-              return driver.field(env.join.right._from(), field);
-            }
-          );
-          tmp.push("AS", self._from());
-        } else {
-          table(self);
-        }
-        result.push(tmp.join(" "));
+        result.push(from(self));
       })();
 
      // WHERE
      (function () {
         result.push("WHERE");
-        function where (env, driver) {
-          if (! env.where) return [];
-          return env.where(driver);
+        function where (self, driver) {
+          if (! self.env.where) return [];
+          return self.env.where(driver, self._table());
         }
-        var tmp = where(env, driver);
-        if (env.join) tmp = tmp.concat(where(env.join.other.env, driver));
+        var tmp = where(self, driver);
+        if (env.join) {
+          tmp = tmp.concat(where(env.join.left, driver));
+          tmp = tmp.concat(where(env.join.right, driver));
+        }
         result.push(tmp.join(" AND "));
       })();
 
@@ -446,7 +454,6 @@ squash.tests = function () {
       return "" + quux ==
         "SELECT t1.name, t2.name, t2.current "
         + "FROM item AS t1 INNER JOIN version AS t2 ON t1.name = t2.name "
-        + "AS t3 "
         + "WHERE t1.name = 'lang' "
         + "AND t2.current = 1";
     },
@@ -459,43 +466,65 @@ squash.tests = function () {
                       });
       tonk = tonk.select("addr").where("addr", "like", "foo%");
       return "" + tonk ==
-        "SELECT el.name, addr FROM el with (NO LOCK)"
-        + " JOIN mv with (NO LOCK) ON el.name = mv.name"
-        + " WHERE addr like 'foo%' AND el.name = 'lang'";
+        "SELECT t1.addr, t1.name FROM el with (NO LOCK) AS t1"
+        + " INNER JOIN mv with (NO LOCK) AS t2 ON t1.name = t2.name"
+        + " WHERE t1.addr like 'foo%' AND t1.name = 'lang'";
     },
     function () {
       var zup = baz.wherein("foo", "=", [1, 2, 3]);
       return "" + zup ==
-        "SELECT item.name FROM item WHERE "
-        + "item.foo IN ('1', '2', '3')"
-        + " AND item.name = 'lang'";
+        "SELECT t1.name FROM item AS t1 WHERE "
+        + "t1.foo IN ('1', '2', '3')"
+        + " AND t1.name = 'lang'";
     },
     function () {
       var zup = baz.wherein("foo", "not like", [1, 2, 3]);
       return "" + zup ==
-        "SELECT item.name FROM item WHERE "
-        + "item.foo NOT LIKE IN ('1', '2', '3')"
-        + " AND item.name = 'lang'";
+        "SELECT t1.name FROM item AS t1 WHERE "
+        + "t1.foo NOT LIKE IN ('1', '2', '3')"
+        + " AND t1.name = 'lang'";
     },
     function () {
       foo = foo.where("test", "=", "test");
       foo = foo.and(foo.where("date", ">", new Date("9/27/2009 15:08:09")),
                     foo.where("class", "=", "valu'''e"));
       return "" + foo ==
-        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE "
-        + "(fnDocuments.date > '09/27/2009 15:08:09' "
-        + "AND fnDocuments.class = 'valu''''''e') "
-        + "AND fnDocuments.test = 'test'";
+        "SELECT t1.date, t1.class FROM fnDocuments AS t1 WHERE "
+        + "(t1.date > '09/27/2009 15:08:09' "
+        + "AND t1.class = 'valu''''''e') "
+        + "AND t1.test = 'test'";
     },
     function () {
-      foo = new squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
+      foo = squash("test").select("test", "t2").count().distinct().wherecol("a", "=", "b");
       return "" + foo == 
-        "SELECT COUNT(DISTINCT(test.test, test.t2)) FROM test WHERE test.a = test.b";
+        "SELECT COUNT(DISTINCT(t1.test, t1.t2)) FROM test AS t1 WHERE t1.a = t1.b";
     },
     function () {
-      foo = new squash("test").select("test").orderby("test").where("foo", "=", 1).distinct();
+      foo = squash("test").select("test").orderby("test").where("foo", "=", 1).distinct();
       return "" + foo == 
-        "SELECT DISTINCT test.test FROM test WHERE test.foo = '1' ORDER BY test.test";
+        "SELECT DISTINCT t1.test FROM test AS t1 WHERE t1.foo = '1' ORDER BY t1.test";
+    },
+    function () {
+      foo = squash("test").select("test").where("foo", "=", 1);
+      bar = squash("test").select("bar").where("baz", "=", 1);
+      foo = foo.join("", bar, function (on, foo, bar) {
+                 on(foo("id"), "=", bar("id2"));
+               });
+      return "" + foo ==
+        "SELECT t1.test, t2.bar FROM test AS t1 "
+        + "INNER JOIN test AS t2 ON t1.id = t2.id2 "
+        + "WHERE t1.foo = '1' AND t2.baz = '1'";
+    },
+    function () {
+      bar = squash("bar").select("bar").where("bar", "=", "foo");
+      foo = foo.join("", bar, function (on, foo, bar) {
+                       on(foo("id"), "=", bar("id"));
+                     });
+      return "" + foo ==
+        "SELECT t1.test, t2.bar, t3.bar FROM test AS t1 "
+        + "INNER JOIN test AS t2 ON t1.id = t2.id2 "
+        + "INNER JOIN bar AS t3 ON t1.id = t3.id "
+        + "WHERE t1.foo = '1' AND t2.baz = '1' AND t3.bar = 'foo'";
     }
   );
 };
