@@ -32,6 +32,13 @@ var squash;
      return result;
    }
 
+   function counter (value, eject) {
+     if (eject) return value;
+     else return function (eject) {
+       return counter(value + 1, eject);
+     };
+   }
+
    // Interface.
    var eFrom = new TypeError("Use join to merge queries");
    var eJoin = new TypeError("Only one join permitted");
@@ -52,14 +59,15 @@ var squash;
        var self = this._clone(); var env = self.env;
        if (env.from) throw eFrom;
        env.from = {table: table, extra: extra};
+       env.id = counter(0);
        return self;
      },
+     _from: function () { return "t" + this.env.id("eject"); },
      select: function (columns) {
        if (!isArray(columns)) columns = slice.call(arguments);
        var self = this._clone(); var env = self.env;
-       var key = (env.join) ? "select_join" : "select";
-       if (env[key]) env[key] = env[key].concat(columns);
-       else env[key] = columns;
+       if (env.select) env.select = env.select.concat(columns);
+       else env.select = columns;
        return self;
      },
      _select_opts: function (opt) {
@@ -158,16 +166,19 @@ var squash;
        return this.or(left, right, " AND ");
      },
      join: function (how, other, handler) {
-       var self = this._clone(); var env = self.env;
-       how = how || "JOIN";
-       if (env.join) throw eJoin;
-       env.join = {how: how, other: other, handler: handler};
+       var self = new statement();
+       other = other._clone();
+       how = how || "INNER JOIN";
+       self.env.join = {left: this, how: how, right: other,
+                        handler: handler};
+       other.env.id = this.env.id();
+       self.env.id = other.env.id();
        return self;
      },
      orderby: function (col, mod) {
        mod = mod || "orderby";
        var self = this._clone(); var env = self.env;
-       var tab = (env.join) ? false : env.from.table;
+       var tab = self._from();
        env.modifier = env.modifier || [];
        env.modifier.push(function (driver) {
                            return driver[mod](tab, col);
@@ -198,12 +209,12 @@ var squash;
          for (var ii=0; ii<cols.length; ii++) proc(ii, cols[ii], tab);
        }
        var cols;
-       if ((cols = this.env.select)) lp(this.env.select, this.env.from.table);
-       if ((cols = this.env.select_join)) lp(cols);
+       if ((cols = this.env.select)) lp(this.env.select, this._from());
        if (this.env.join) {
-         var other = this.env.join.other.env;
-         if ((cols = other.select)) lp(cols, other.from.table);
-         if ((cols = other.select_join)) lp(cols);
+         var set = this.env.join.left;
+         if (set.env.select) lp(set.env.select, set._from());
+         set = this.env.join.right;
+         if (set.env.select) lp(set.env.select, set._from());
        }
      }
    };
@@ -246,32 +257,34 @@ var squash;
      // JOIN || FROM
      (function () {
         var tmp = [];
-        function table (env) {
+        function table (self) {
+          var env = self.env;
           tmp.push(env.from.table);
           if (env.from.extra) tmp.push(env.from.extra);
+          tmp.push("AS", self._from());
         }
         result.push("FROM");
         if (env.join) {
-          table(env);
+          table(env.join.left);
           tmp.push(env.join.how);
-          table(env.join.other.env);
+          table(env.join.right);
           env.join.handler(
             function (arg0, arg1) {
               tmp.push("ON");
               tmp = tmp.concat(slice.call(arguments));
             },
             function (field) {
-              return driver.field(env.from.table, field);
+              return driver.field(env.join.left._from(), field);
             },
             function (field) {
-              return driver.field(env.join.other.env.from.table, field);
+              return driver.field(env.join.right._from(), field);
             }
           );
-          result.push(tmp.join(" "));
+          tmp.push("AS", self._from());
         } else {
-          result.push(env.from.table);
-          if (env.from.extra) result.push(env.from.extra);
+          table(self);
         }
+        result.push(tmp.join(" "));
       })();
 
      // WHERE
@@ -405,36 +418,37 @@ squash.tests = function () {
     .select(["name", "current"]);
 
   quux = baz.join(
-    "INNER JOIN", zup, function (where, item, ver) {
+    "", zup, function (where, item, ver) {
       return where(item("name"), "=", ver("name"));
     });
 
   assert(
     function () {
       return "" + foo ==
-        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE ";
+        "SELECT t1.date, t1.class FROM fnDocuments AS t1 WHERE ";
     },
     function () {
       return bar.toString() ==
-        "SELECT fnDocuments.date, fnDocuments.class FROM fnDocuments WHERE "
-        + "(fnDocuments.date > '09/27/2009 15:08:09' "
-        + "OR fnDocuments.class = 'valu''''''e')";
+        "SELECT t1.date, t1.class FROM fnDocuments AS t1 WHERE "
+        + "(t1.date > '09/27/2009 15:08:09' "
+        + "OR t1.class = 'valu''''''e')";
     },
     function () {
       return "" + baz ==
-        "SELECT item.name FROM item WHERE item.name = 'lang'";
+        "SELECT t1.name FROM item AS t1 WHERE t1.name = 'lang'";
     },
     function () {
       return "" + zup ==
-        "SELECT version.name, version.current FROM version"
-        + " WHERE version.current = 1";
+        "SELECT t1.name, t1.current FROM version AS t1"
+        + " WHERE t1.current = 1";
     },
     function () {
       return "" + quux ==
-        "SELECT item.name, version.name, version.current "
-        + "FROM item INNER JOIN version ON item.name = version.name "
-        + "WHERE item.name = 'lang' "
-        + "AND version.current = 1";
+        "SELECT t1.name, t2.name, t2.current "
+        + "FROM item AS t1 INNER JOIN version AS t2 ON t1.name = t2.name "
+        + "AS t3 "
+        + "WHERE t1.name = 'lang' "
+        + "AND t2.current = 1";
     },
     function () {
       var foo = squash("el", "with (NO LOCK)").select("name")
