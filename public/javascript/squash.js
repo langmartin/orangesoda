@@ -39,6 +39,11 @@ var squash;
      };
    }
 
+   function pushif (arr, value) {
+     if (value) arr.push(value);
+     return arr;
+   }
+
    // Interface.
    var eFrom = new TypeError("Use join to merge queries");
    var eJoin = new TypeError("Only one join permitted");
@@ -260,13 +265,13 @@ var squash;
       })();
 
      // JOIN || FROM
-     function from (self) {
+     function from (self, driver) {
        var tmp = [];
        var env = self.env;
        if (env.join) {
-         tmp.push(from(env.join.left));
+         tmp.push(from(env.join.left, driver));
          tmp.push(env.join.how);
-         tmp.push(from(env.join.right));
+         tmp.push(from(env.join.right, driver));
          env.join.handler(
            function (arg0, arg1) {
              tmp.push("ON");
@@ -286,26 +291,23 @@ var squash;
        }
        return tmp.join(" ");
      }
-
-     (function () {
-        result.push("FROM");
-        result.push(from(self));
-      })();
+     result.push("FROM");
+     result.push(from(self, driver));
 
      // WHERE
-     (function () {
-        result.push("WHERE");
-        function where (self, driver) {
-          if (! self.env.where) return [];
-          return self.env.where(driver, self._table());
-        }
-        var tmp = where(self, driver);
-        if (env.join) {
-          tmp = tmp.concat(where(env.join.left, driver));
-          tmp = tmp.concat(where(env.join.right, driver));
-        }
-        result.push(tmp.join(" AND "));
-      })();
+     function where (self, driver) {
+       var tmp = [];
+       if (self.env.where) {
+         tmp = self.env.where(driver, self._table());
+       }
+       if (self.env.join) {
+         pushif(tmp, where(self.env.join.left, driver));
+         pushif(tmp, where(self.env.join.right, driver));
+       }
+       return tmp.join(' AND ');
+     }
+     result.push("WHERE");
+     result.push(where(self, driver));
 
      // ORDER BY & GROUP BY
      (function () {
@@ -471,7 +473,7 @@ squash.tests = function () {
         + " WHERE t1.addr like 'foo%' AND t1.name = 'lang'";
     },
     function () {
-      var zup = baz.wherein("foo", "=", [1, 2, 3]);
+      zup = baz.wherein("foo", "=", [1, 2, 3]);
       return "" + zup ==
         "SELECT t1.name FROM item AS t1 WHERE "
         + "t1.foo IN ('1', '2', '3')"
