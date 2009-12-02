@@ -1,7 +1,7 @@
 * Emacs in Javascript & the DOM
 by [[file:lang.org][Lang]] [2009-10-31 Sat]
 
-Quixotic, embryonic. The [[file:jsmacs/test.html][test code]] requires =console.debug=.
+Quixotic, embryonic. The [[http://github.com/langmartin/jsmacs/blob/master/test.html][test code]] requires =console.debug=.
 
 * Components
 ** Elisp Interpreter
@@ -22,9 +22,8 @@ Quixotic, embryonic. The [[file:jsmacs/test.html][test code]] requires =console.
 *** Data Types
 
 *** Elisp Compiler
-"Analyizing Intpreter", I think. Byte compiling is (probably) slower
-than expressing elisp in idomatic javascript. The intepretation
-approach should also be less work.
+"Analyzing Interpreter", I think. Byte compiling is (probably) slower
+than expressing elisp in idomatic javascript.
 
 ** Keyboard Capture
 *** Mouse Capture

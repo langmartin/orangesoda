@@ -61,6 +61,5 @@
      ,(funcall code-dir "scheme")
      ,(funcall code-dir "javascript")
      ,(funcall code-dir "emacs-lisp")
-     ,(funcall code-dir "jsmacs")
 
      ("orangesoda" :components ,components))))
