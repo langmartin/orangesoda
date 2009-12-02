@@ -1,33 +1,4 @@
 (function () {
-   var car = jsmacs.list.prototype.car;
-
-   function isatom (expr) {
-     return true;
-   }
-   function doatom (expr) {
-     return expr;
-   }
-
-   function iscall (expr) {
-     
-   }
-   function docall (proc, args, env, fenv) {
-     for (var key in fenv_bindings(proc)) {
-       env[key] = eval(args.shift, env, fenv);
-     }
-     
-   }
-
-   jsmacs.eval = function (form, env, fenv) {
-     var word = car(form);
-     if (isatom(word)) 1;
-     if (isform(word)) 1;
-     if (isprim(word)) 1;
-     if (iscall(word)) 1;
-   };
-
-
-
    function environment (env) {
      var frame = {};
      frame.__proto__ = env;
@@ -38,16 +9,25 @@
      return typeof obj != "object";
    }
 
-   function lambdap (obj) {
-     return expressionp(obj) && (car(obj) == "lambda");
+   var syntax = {
+     lambda: lambda,
+     if: _if_,
+     defmacro: defmacro,
+     defun: defun
+   };
+
+   function lambda (expr) {
    }
 
-   function analyse (expr) {
+   function _if_ (env, expr) {
+     return (evaluate(env, expr.car()))
+       ? evaluate(env, expr.cadr())
+       : evaluate(env, expr.caddr());
+   }
      
-   }
-
    function evaluate (env, expr) {
      if (atomp(expr)) return expr;
+     if (car(expr) == "lambda") return analyse(expr);
      if (lambdap(expr)) return analyse(expr);
      if (formp(expr)) {
        return evaluate(env, expand(env, expr));

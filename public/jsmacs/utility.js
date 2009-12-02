@@ -7,6 +7,10 @@ function numericp (ch) {
 }
 
 function isArray (obj) {
+  return toString.call(obj) === "[object Array]";
+}
+
+function isArrayLike (obj) {
   return obj && obj.length;
 }
 
