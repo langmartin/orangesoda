@@ -1,4 +1,34 @@
-var jsmacs = {elisp: {}};
+var jsmacs = {elisp:{data:{}}};
+
+jsmacs.elisp.data.symbol = function (sym, line, col) {
+  this.symbol = sym;
+  this.line = line;
+  this.column = col;
+};
+jsmacs.elisp.data.symbol.prototype = {
+  toString: function () { return this.symbol; }
+};
+
+jsmacs.elisp.data.string = function (str) {
+  this.string = str;
+};
+jsmacs.elisp.data.string.prototype = {
+  toString: function () { return this.string; }
+};
+
+jsmacs.elisp.data.cons = function (car, cdr) {
+  this.__car = car;
+  this.__cdr = cdr;
+};
+
+jsmacs.elisp.data.cons.prototype = {
+  listp: function () { return this.prototype === cons.prototype; },
+  car: function () { return this.__car; },
+  cdr: function () { return this.__cdr; },
+  cadr: function () { return this.cdr().car(); },
+  cddr: function () { return this.cdr().cdr(); },
+  caddr: function () { return this.cddr().car(); }
+};
 
 (function () {
    var stringport = function (text) {
@@ -33,6 +63,8 @@ var jsmacs = {elisp: {}};
      throw new TypeError("Reader parse error: " + text);
    }
 
+   var data = jsmacs.elisp.data;
+
    reader.parser = function (port) {
      var peek = function () { return port.peek(); };
      var read = function () { return port.read(); };
@@ -49,7 +81,7 @@ var jsmacs = {elisp: {}};
          else if (! legal[charclass(ch)]) break;
          sym.push(read());
        }
-       return sym.join('');
+       return new data.symbol(sym.join(''), port.line, port.column);
      }
 
      // This is only used by inclusive, I don't feel like creating an
@@ -103,7 +135,7 @@ var jsmacs = {elisp: {}};
            else str.push(ch);
          }
        }
-       return new String(str.join(''));
+       return new data.string(str.join(''));
      }
 
      function token (ch) {
