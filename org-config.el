@@ -19,7 +19,7 @@
 
 (defun org-orangesoda-static (dir)
   (let ((src (concat default-directory "public/"))
-        (name (concat "orangesoda-" dir)))
+        (name (concat "orangesoda-static-" dir)))
     `(,name
       :base-directory ,(concat src dir)
       :base-extension "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"
@@ -38,13 +38,14 @@
              :base-directory ,base
              :publishing-directory ,publish
              :publishing-function org-publish-org-to-html
+             :link-home "http://orangesoda.net/"
              :table-of-contents nil
              :section-numbers nil
              :todo-keywords nil
              :priority nil
              :auto-postamble nil
              :style-include-default nil
-             :style "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/site.css\" />")))
+             :style "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/site.css\" />")))
       (if (string= "" dir)
           (setq module
                 (append module
