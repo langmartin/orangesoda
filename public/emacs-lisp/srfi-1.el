@@ -50,4 +50,9 @@ true values returned by proc."
       (setq lst (cdr lst)))
     value))
 
+(defun unfold (stopp val next seed tail-gen)
+  (if (funcall stopp seed) (funcall tail-gen seed)
+    (cons (val seed)
+          (unfold stopp val next (funcall next seed) tail-gen))))
+
 (provide 'srfi-1)
