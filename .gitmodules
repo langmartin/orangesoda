@@ -1,3 +1,6 @@
 [submodule "public/squash"]
 	path = public/squash
 	url = git@github.com:langmartin/squash.git
+[submodule "public/jsmacs"]
+	path = public/jsmacs
+	url = git@github.com:langmartin/jsmacs.git

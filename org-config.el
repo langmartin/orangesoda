@@ -56,18 +56,15 @@
     (setq project
           (append
            (mapcar 'org-orangesoda-submodule
-                   '(""
-                     "squash"
-                     ))
+                   '("" "squash" "jsmacs"))
            (mapcar 'org-orangesoda-static
                    '("css"
                      "js"
-                     "ht"
                      "scheme"
                      "javascript"
                      "emacs-lisp"
-                     "squash"
-                     "squash/js"
+                     "squash" "squash/js"
+                     "jsmacs"
                      ))))
     (setq project
           (cons (cons "orangesoda"
