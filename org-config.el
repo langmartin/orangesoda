@@ -17,49 +17,66 @@
 (if (not (boundp 'orange-soda-publish-directory))
     (setq orange-soda-publish-directory "/orangesoda:/home/public/"))
 
-(let* ((top orange-soda-publish-directory)
-       (src (concat default-directory "public/"))
-       (components '("orangesoda-org"))
-       (orangesoda-dir
-	(lambda (dir, ext)
-	  (let ((name (concat "orangesoda-" dir)))
-            (setq components (cons name components))
-            `(,name
-              :base-directory ,(concat src dir)
-              :base-extension ,ext
-              :publishing-directory ,(concat top dir)
-              :publishing-function org-publish-attachment))))
-       (code-dir
-        (lambda (dir)
-          (funcall orangesoda-dir dir "js\\|el\\|scm\\|html")))
-       (static-media
-        (lambda (dir)
-          (funcall orangesoda-dir dir "js\\|css\\|png\\|jpg\\|gif"))))
-  (setq
-   org-publish-project-alist
-   `(("orangesoda-org"
-      :base-directory ,src
-      :publishing-directory ,top
-      :publishing-function org-publish-org-to-html
+(defun org-orangesoda-static (dir)
+  (let ((src (concat default-directory "public/"))
+        (name (concat "orangesoda-" dir)))
+    `(,name
+      :base-directory ,(concat src dir)
+      :base-extension "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"
+      :publishing-directory ,(concat orange-soda-publish-directory dir)
+      :publishing-function org-publish-attachment)))
 
-      :auto-index t
-      :index-filename "sitemap.org"
+(defun org-orangesoda-submodule (dir)
+  (let* ((src (concat default-directory "public/"))
+         (pub orange-soda-publish-directory)
+         (base (if (string= "" dir) src (concat src dir)))
+         (publish (if (string= "" dir) pub (concat pub dir)))
+         (name (concat "orangesoda-" dir)))
+    (let ((module
+           `(,name
+             :base-directory ,base
+             :publishing-directory ,publish
+             :publishing-function org-publish-org-to-html
+             :table-of-contents nil
+             :section-numbers nil
+             :todo-keywords nil
+             :priority nil
+             :auto-postamble nil
+             :style-include-default nil
+             :style "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/site.css\" />")))
+      (if (string= "" dir)
+          (setq module
+                (append module
+                        '(:auto-index t :index-filename "sitemap.org"))))
+      module)))
 
-      :table-of-contents nil
-      :section-numbers nil
-      :todo-keywords nil
-      :priority nil
-      :auto-postamble nil
+(defun org-orangesoda-build ()
+  (let ((project '()))
+    (setq project
+          (append
+           (mapcar 'org-orangesoda-submodule
+                   '(""
+                     "squash"
+                     ))
+           (mapcar 'org-orangesoda-static
+                   '("css"
+                     "js"
+                     "ht"
+                     "scheme"
+                     "javascript"
+                     "emacs-lisp"
+                     "squash"
+                     "squash/js"
+                     ))))
+    (setq project
+          (cons (cons "orangesoda"
+                      (list :components
+                            (mapcar 'car project)))
+                project))
+    project))
 
-      :style-include-default nil
-      :style "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/site.css\" />")
+(defun org-orangesoda-clobber ()
+  (interactive)
+  (setq org-publish-project-alist (org-orangesoda-build)))
 
-     ,(funcall static-media "css")
-     ,(funcall static-media "js")
-
-     ,(funcall code-dir "ht")
-     ,(funcall code-dir "scheme")
-     ,(funcall code-dir "javascript")
-     ,(funcall code-dir "emacs-lisp")
-
-     ("orangesoda" :components ,components))))
+(org-orangesoda-clobber)
