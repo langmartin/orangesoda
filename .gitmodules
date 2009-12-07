@@ -1,0 +1,3 @@
+[submodule "public/squash"]
+	path = public/squash
+	url = git@github.com:langmartin/squash.git
