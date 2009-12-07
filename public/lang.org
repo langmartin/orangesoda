@@ -1,5 +1,6 @@
-* Lang Martin
-  Email lang.martin at Gmail.
+#+TITLE: Lang Martin
+
+Email lang.martin at Gmail.
 
 * Cheat Sheets
 ** Emacs

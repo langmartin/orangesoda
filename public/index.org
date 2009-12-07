@@ -1,6 +1,7 @@
-* Orangesoda
-  [[file:sitemap.org][Sitemap]] and [[file:license.org][License]]. Everything on this site falls under the license
-  unless otherwise noted.
+#+TITLE: Orangesoda
+
+[[file:sitemap.org][Sitemap]] and [[file:license.org][License]]. Everything on this site falls under the license
+unless otherwise noted.
 
 * Emacs
 ** SRFI-2 =and-let*=
