@@ -31,7 +31,8 @@
          (pub orange-soda-publish-directory)
          (base (if (string= "" dir) src (concat src dir)))
          (publish (if (string= "" dir) pub (concat pub dir)))
-         (name (concat "orangesoda-" dir)))
+         (name (if (string= "" dir) "orangesoda.net"
+                 (concat "orangesoda-" dir))))
     (let ((module
            `(,name
              :base-directory ,base
