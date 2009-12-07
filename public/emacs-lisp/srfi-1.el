@@ -18,22 +18,22 @@
       nil-value
     (funcall proc
              (car lst)
-             (foldr proc nil-value (cdr lst)))))
+             (fold-right proc nil-value (cdr lst)))))
 
-(assert (eql 6 (foldr '+ 0 '(1 2 3)))
+(assert (eql 6 (fold-right '+ 0 '(1 2 3)))
         (let* ((test '(1 2 3))
                (ref test))
-          (foldr '+0 ref)
+          (fold-right '+0 ref)
           (eq ref test)))
 
 (defun intersperse (lst el)
   (cons (car lst)
-        (foldr (lambda (x acc)
-                 (cons el
-                       (cons x
-                             acc)))
-               '()
-               (cdr lst))))
+        (fold-right (lambda (x acc)
+                      (cons el
+                            (cons x
+                                  acc)))
+                    '()
+                    (cdr lst))))
 
 (assert (equal (intersperse '(1 2 3) 8)
                '(1 8 2 8 3)))
