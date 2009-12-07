@@ -1,6 +1,5 @@
 (defun fold (proc nil-value seq)
-  "Traditional fold-left, iterative style since we don't have
-tail calls. We use mapc, so this can handle sequences."
+  "The fundamental list iterator."
   (let ((acc nil-value))
     (mapc (lambda (el)
             (setq acc (funcall proc el acc)))
@@ -13,8 +12,8 @@ tail calls. We use mapc, so this can handle sequences."
           (fold '+0 ref)
           (eq ref test)))
 
-(defun foldr (proc nil-value lst)
-  "Traditional fold-right, will blow up the stack"
+(defun fold-right (proc nil-value lst)
+  "The fundamental list recursion operator"
   (if (null lst)
       nil-value
     (funcall proc
