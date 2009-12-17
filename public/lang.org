@@ -50,3 +50,66 @@ directory or in your =Application Data= directory, although a
 
     I've had even better success dumping JSON to the client and keeping
     the HTML on the client side.
+
+*** Registry Settings for the Default Browser
+    From this [[http://www.tomshardware.com/forum/170215-46-default-browser-registry][Tom's Hardware forum post]]:
+
+#+BEGIN_EXAMPLE
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.shtml]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.xht]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.xhtm]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.xhtml]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.htm]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.html]
+@="FirefoxHTML"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\FirefoxHTML\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\FirefoxHTML\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\ftp\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\ftp\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\gopher\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\gopher\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\http\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\http\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\https\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\https\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CHROME\DefaultIcon]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE,1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CHROME\shell\open\command]
+@="C:\\PROGRA~1\\MOZILL~1\\FIREFOX.EXE -url \"%1\""
+
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+"Check_Associations"="No"
+"IgnoreDefCheck"="Yes"
+#+END_EXAMPLE
