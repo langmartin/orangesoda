@@ -7,8 +7,9 @@ unless otherwise noted.
 ** SRFI-1 List Utilities
    by [[file:lang.org][Lang]] [2009-12-07 Mon]
 
-   Emacs-lisp implementations of a few functions from [[http://srfi.schemers.org/srfi-1/srfi-1.html][SRFI-1]]. I've
-   also included intersperse, which is useful for string manipulation.
+   Emacs-lisp implementations of a few functions from [[http://srfi.schemers.org/srfi-1/srfi-1.html][SRFI-1]],
+   [[./emacs-lisp/srfi-1.el][srfi-1.el]]. I've also included intersperse, which is useful for
+   string manipulation.
 
 ** SRFI-2 =and-let*=
    <<SRFI-2.el>> by [[file:lang.org][Lang]]. [2009-07-17 Fri]
@@ -74,8 +75,7 @@ unless otherwise noted.
    abstraction; clauses are interpreted with late-binding. It's
    possible to use the same set of where clauses in multiple contexts.
 
-   This is (sadly) the first implementation that occurred to me, it's
-   got warts. [[file:squash][Squash]].
+   [[file:squash][Squash]].
 
 * Scheme
 ** A =REQUIRE= special form for Gambit-C
