@@ -13,7 +13,25 @@ Email lang.martin at Gmail.
    - VC Annotate :: =C-x v g= for line-by-line history.
    - URL Encoding :: =org-link-unescape= and =org-link-escape=.
    - eshell pipe to buffer :: =diff > #<buffer *scratch*>=
-   - iBuffer multi-occur :: =O= operates on tagged files. =I= for replace.
+   - iBuffer multi-occur :: =O= operates on tagged files. =I= for
+        replace.
+   - GNUS Gmail Search :: =G G= in the Group buffer. See
+        [[http://www.emacswiki.org/emacs/GnusGmail#toc16][Gnus Gmail on Emacswiki]] for more detail.
+
+** Firefox
+   - =browser.tabs.closeButtons= :: 2 will hide the close buttons.
+        More tab text real estate.
+   - =browser.tabs.tabMinWidth= :: reduce from 100 to allow more tabs
+        without the drop down.
+   - =browser.sessionstore.interval= :: increase to fix choppy video
+        (maybe not necessary > 3.5).
+   - =extensions.checkCompatibility.3.6= :: create boolean false to
+        enable extensions that aren't marked ready for the new
+        version.
+   - =mousewheel.withshiftkey.action= :: 0 to make it scroll
+        horizontally.
+   - =network.cookie.lifetime.days= :: expire all cookies in...
+   - =network.cookie.lifetimePolicy= :: 3 to honor lifetime.days.
 
 ** Windows
    [2009-10-29 Thu]
