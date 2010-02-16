@@ -17,6 +17,7 @@ Email lang.martin at Gmail.
         replace.
    - GNUS Gmail Search :: =G G= in the Group buffer. See
         [[http://www.emacswiki.org/emacs/GnusGmail#toc16][Gnus Gmail on Emacswiki]] for more detail.
+   - GNUS Gmail Keeping in Sync :: [[http://www.emacswiki.org/emacs/GnusGmail#toc11][Catching Up]] on that same page.
 
 ** Firefox
    - =browser.tabs.closeButtons= :: 2 will hide the close buttons.
