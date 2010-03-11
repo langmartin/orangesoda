@@ -3,6 +3,9 @@
 [[file:sitemap.org][Sitemap]] and [[file:license.org][License]]. Everything on this site falls under the license
 unless otherwise noted.
 
+* Recently Updated
+  - [[file:squash/index.org][Squash]]: by [[file:lang.org][Lang]], [2010-03-11 Thu]. A new version, r2.
+
 * Emacs
 ** SRFI-1 List Utilities
    by [[file:lang.org][Lang]] [2009-12-07 Mon]
