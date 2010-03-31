@@ -1,5 +1,14 @@
 #+TITLE: Windows
 
+* Autohotkey
+  by [[./lang.org][Lang]], [2010-03-31 Wed]
+
+  [[http://www.autohotkey.com/][Autohotkey]] is a scripting language for manipulation windows inputs.
+  It works well for mapping Caps Lock to Control. My [[./windows/remap.ahk][remapping script]].
+  The top few lines do basic rebinding, the rest of the file maps
+  Shift + Scroll Wheel to Horizontal Scroll Wheel in Firefox. That's
+  the default behavior on OS X, and I got used to it.
+
 * Firefox
   by [[./lang.org][Lang]], [2010-03-31 Wed]
 
@@ -19,42 +28,39 @@
   - =network.cookie.lifetime.days= :: expire all cookies in...
   - =network.cookie.lifetimePolicy= :: 3 to honor lifetime.days.
 
-* Windows
-  by [[./lang.org][Lang]], [2010-03-31 Wed]
+* Fonts
+  - [[http://www.microsoft.com/downloads/details.aspx?familyid=22e69ae4-7e40-4807-8a86-b3d36fab68d3&displaylang=en][Consolas]] :: Nice monospace font if ClearType is on.
+  - [[http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=DoulosSILfont][DoulosSIL]] :: missing unicode glyphs.
 
-** Fonts
-   - [[http://www.microsoft.com/downloads/details.aspx?familyid=22e69ae4-7e40-4807-8a86-b3d36fab68d3&displaylang=en][Consolas]] :: Nice monospace font if ClearType is on.
-   - [[http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=DoulosSILfont][DoulosSIL]] :: missing unicode glyphs.
+* Install Flash Manually
+  1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
+  2. Rename to =.zip=
+  3. Copy =NPSWF32.dll= and =flashplayer.xpt= to =Mozilla Firefox\plugins= [fn:plugins]
+  4. Restart
+  5. http://www.mozilla.com/en-US/plugincheck/
 
-** Install Flash Manually
-   1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
-   2. Rename to =.zip=
-   3. Copy =NPSWF32.dll= and =flashplayer.xpt= to =Mozilla Firefox\plugins= [fn:plugins]
-   4. Restart
-   5. http://www.mozilla.com/en-US/plugincheck/
+  [fn:plugins] Firefox plugins can be installed either in the global
+  directory or in your =Application Data= directory, although a
+  =plugins= sub-folder might not exist. IE plugins (on XP) seem to go
+  in =system32\Macromed\Flash=.
 
-   [fn:plugins] Firefox plugins can be installed either in the global
-   directory or in your =Application Data= directory, although a
-   =plugins= sub-folder might not exist. IE plugins (on XP) seem to go
-   in =system32\Macromed\Flash=.
+* Classic ASP Order of Evaluation
+  by [[file:lang.org][Lang]]. [2009-07-17 Fri]
 
-** Classic ASP Order of Evaluation
-   by [[file:lang.org][Lang]]. [2009-07-17 Fri]
+  Classic ASP supports a few different language platforms, although
+  it seems rare to see anything other than VBScript and JScript. The
+  order of evaluation is:
 
-   Classic ASP supports a few different language platforms, although
-   it seems rare to see anything other than VBScript and JScript. The
-   order of evaluation is:
+  0. The language tag.
+  1. =<script>= tags in the non-default language.
+  2. =<script>= tags in the default language.
+  3. Static HTML and =<% %>= blocks in order.
 
-   0. The language tag.
-   1. =<script>= tags in the non-default language.
-   2. =<script>= tags in the default language.
-   3. Static HTML and =<% %>= blocks in order.
+  There are some restrictions on the type of data that can be passed
+  between languages, but functions appear to be fair game. I've had
+  success programming in JScript by leaving the default language
+  alone and preparing thunks that produce output. I can call those
+  thunks in the page as =<% foo_thunk %>=.
 
-   There are some restrictions on the type of data that can be passed
-   between languages, but functions appear to be fair game. I've had
-   success programming in JScript by leaving the default language
-   alone and preparing thunks that produce output. I can call those
-   thunks in the page as =<% foo_thunk %>=.
-
-   I've had even better success dumping JSON to the client and keeping
-   the HTML on the client side.
+  I've had even better success dumping JSON to the client and keeping
+  the HTML on the client side.
