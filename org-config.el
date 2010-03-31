@@ -24,7 +24,7 @@
       '("squash" "jsmacs"))
 
 (setq org-orangesoda-static-list
-      '("css" "js" "scheme" "javascript" "emacs-lisp"))
+      '("css" "js" "scheme" "javascript" "emacs-lisp" "windows"))
 
 (setq org-orangesoda-module-options
       (list
@@ -37,13 +37,17 @@
        :auto-postamble nil
        :style-include-default nil
        :style
-       "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/site.css\"/>"))
+       (concat
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/site.css\"/>\n"
+        "<link rel=\"SHORTCUT ICON\" href=\"/favicon.ico\"/>")))
 
 (setq org-orangesoda-static-options
       (list
        :publishing-function 'org-publish-attachment
        :base-extension
-       "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif\\|ico\\|txt"))
+       (concat
+        "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"
+        "\\|ico\\|txt\\|ahk")))
 
 (defun org-orangesoda-make-alist ()
   (let* ((src-root (concat default-directory "public/"))
@@ -74,7 +78,11 @@
                          (funcall cons "orangesoda-module"
                                   src-root
                                   org-orangesoda-publish-directory
-                                  module
+                                  (append
+                                   (list :auto-index t
+                                         :index-filename "sitemap.org"
+                                         :index-title "Orangesoda Sitemap")
+                                   module)
                                   nil))
                 org-orangesoda-module-list)
           org-orangesoda-static-list)))

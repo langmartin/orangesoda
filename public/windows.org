@@ -1,4 +1,4 @@
-#+TITLE: Windows
+#+TITLE: Orangesoda Windows
 
 * Autohotkey
   by [[./lang.org][Lang]], [2010-03-31 Wed]
@@ -64,3 +64,10 @@
 
   I've had even better success dumping JSON to the client and keeping
   the HTML on the client side.
+
+* IE Debugging
+  =HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main=,
+  =Disable Script Debugger= and =DisableScriptDebuggerIE=.
+
+* Registry Settings for the Default Browser
+  See this [[http://www.tomshardware.com/forum/170215-46-default-browser-registry][Tom's Hardware forum post]]:

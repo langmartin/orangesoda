@@ -1,4 +1,4 @@
-#+TITLE: Orangesoda
+#+TITLE: Orangesoda Index
 
 [[file:sitemap.org][Sitemap]] and [[file:license.org][License]]. Everything on this site falls under the license
 unless otherwise noted.
