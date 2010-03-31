@@ -42,7 +42,8 @@
 (setq org-orangesoda-static-options
       (list
        :publishing-function 'org-publish-attachment
-       :base-extension "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"))
+       :base-extension
+       "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif\\|ico\\|txt"))
 
 (defun org-orangesoda-make-alist ()
   (let* ((src-root (concat default-directory "public/"))
