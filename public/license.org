@@ -1,4 +1,5 @@
 #+TITLE: The www.orangesoda.net Copyright
+[[./index.org][Home]]
 
 Copyright (c) 2009, Lang Martin and Ben Weaver.  All rights reserved.
 

@@ -1,4 +1,5 @@
 #+TITLE: HTML5 Dataset jQuery Plugin
+[[./index.org][Home]]
 
 * Introduction
 

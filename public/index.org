@@ -68,13 +68,13 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
 
 * Contributers
 ** <<Ben>> Weaver
-
    [[http://benweaver.com/][Ben]] lives in Chattanooga TN and works at [[http://thisismedium.com/][Medium]].  You can follow
    him on [[http://twitter.com/bwvr][Twitter]], see code on [[http://github.com/weaver][github]], or send an email to
    [his-first-name] at orangesoda.net.
 
 ** <<Lang>> Martin
-   [[file:lang.org][Lang Martin]] also lives in Chattanooga.
+   [[file:lang.org][Lang]] is also in Chattanooga. I don't really do social networking; I
+   do have an account at [[http://github.com/langmartin][github]]. You can email lang.martin at Gmail.
 
 * Wibler.com
   Wibler email & apps are hosted by Google:

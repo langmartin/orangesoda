@@ -1,4 +1,5 @@
 #+TITLE: Emacs
+[[./index.org][Home]] [[./lang.org][Up]]
 
 * Tips and Tricks
   by [[./lang.org][Lang]] [2010-03-31 Wed]

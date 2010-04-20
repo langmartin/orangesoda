@@ -1,4 +1,5 @@
 #+TITLE: Windows Cheat Sheet
+[[./index.org][Home]] [[./lang.org][Up]]
 
 * Autohotkey
   by [[./lang.org][Lang]], [2010-03-31 Wed]
