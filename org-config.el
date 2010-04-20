@@ -29,12 +29,13 @@
 (setq org-orangesoda-module-options
       (list
        :publishing-function 'org-publish-org-to-html
-       :link-home "http://orangesoda.net/"
+       :link-home "http://www.orangesoda.net/"
        :table-of-contents nil
        :section-numbers nil
        :todo-keywords nil
        :priority nil
-       :auto-postamble nil
+       :author-info nil
+       :auto-postamble t
        :style-include-default nil
        :style
        (concat
@@ -92,3 +93,7 @@
       (cons (list "orangesoda"
                   :components (mapcar 'car org-publish-project-alist))
             org-publish-project-alist))
+
+(defun org-orangesoda-publish (&optional force)
+  (interactive "P")
+  (org-publish (assoc "orangesoda" org-publish-project-alist) force))
