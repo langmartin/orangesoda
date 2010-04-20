@@ -9,6 +9,15 @@
   Shift + Scroll Wheel to Horizontal Scroll Wheel in Firefox. That's
   the default behavior on OS X, and I got used to it.
 
+* Disable Console Beep
+  The CMD window on XP uses the internal PC speaker beep. Stop it, and
+  set it to not start on boot:
+
+  : net stop beep
+  : sc config beep start= disabled
+
+  The CMD window will manage ok over ssh with =TERM=xterm=.
+
 * Firefox
   by [[./lang.org][Lang]], [2010-03-31 Wed]
 
@@ -68,6 +77,3 @@
 * IE Debugging
   =HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main=,
   =Disable Script Debugger= and =DisableScriptDebuggerIE=.
-
-* Registry Settings for the Default Browser
-  See this [[http://www.tomshardware.com/forum/170215-46-default-browser-registry][Tom's Hardware forum post]]:

@@ -1,7 +1,8 @@
+;;;; Caps Lock to Control
 CapsLock::Ctrl
-+Capslock::Capslock
 RCtrl::AppsKey
 
+;;;; Shift + Scroll as Horizontal Scroll in Firefox
 ~LShift & WheelUp:: ; Scroll left.
 if WinActive("ahk_class MozillaUIWindowClass")
 {
