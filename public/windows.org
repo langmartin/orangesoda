@@ -10,6 +10,27 @@
   Shift + Scroll Wheel to Horizontal Scroll Wheel in Firefox. That's
   the default behavior on OS X, and I got used to it.
 
+* Classic ASP Order of Evaluation
+  by [[file:lang.org][Lang]]. [2009-07-17 Fri]
+
+  Classic ASP supports a few different language platforms, although
+  it seems rare to see anything other than VBScript and JScript. The
+  order of evaluation is:
+
+  0. The language tag.
+  1. =<script>= tags in the non-default language.
+  2. =<script>= tags in the default language.
+  3. Static HTML and =<% %>= blocks in order.
+
+  There are some restrictions on the type of data that can be passed
+  between languages, but functions appear to be fair game. I've had
+  success programming in JScript by leaving the default language
+  alone and preparing thunks that produce output. I can call those
+  thunks in the page as =<% foo_thunk %>=.
+
+  I've had even better success dumping JSON to the client and keeping
+  the HTML on the client side.
+
 * Disable Console Beep
   The CMD window on XP uses the internal PC speaker beep. Stop it, and
   set it to not start on boot:
@@ -42,6 +63,11 @@
   - [[http://www.microsoft.com/downloads/details.aspx?familyid=22e69ae4-7e40-4807-8a86-b3d36fab68d3&displaylang=en][Consolas]] :: Nice monospace font if ClearType is on.
   - [[http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=DoulosSILfont][DoulosSIL]] :: missing unicode glyphs.
 
+* IE Debugging
+  =HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main=,
+  =Disable Script Debugger= and =DisableScriptDebuggerIE=.
+  =Friendly http errors=.
+
 * Install Flash Manually
   1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
   2. Rename to =.zip=
@@ -54,27 +80,8 @@
   =plugins= sub-folder might not exist. IE plugins (on XP) seem to go
   in =system32\Macromed\Flash=.
 
-* Classic ASP Order of Evaluation
-  by [[file:lang.org][Lang]]. [2009-07-17 Fri]
-
-  Classic ASP supports a few different language platforms, although
-  it seems rare to see anything other than VBScript and JScript. The
-  order of evaluation is:
-
-  0. The language tag.
-  1. =<script>= tags in the non-default language.
-  2. =<script>= tags in the default language.
-  3. Static HTML and =<% %>= blocks in order.
-
-  There are some restrictions on the type of data that can be passed
-  between languages, but functions appear to be fair game. I've had
-  success programming in JScript by leaving the default language
-  alone and preparing thunks that produce output. I can call those
-  thunks in the page as =<% foo_thunk %>=.
-
-  I've had even better success dumping JSON to the client and keeping
-  the HTML on the client side.
-
-* IE Debugging
-  =HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main=,
-  =Disable Script Debugger= and =DisableScriptDebuggerIE=.
+* Keyboard Shortcuts
+  1. Paste without Formatting :: In MS Office, you can "Paste Special"
+     to remove formatting with =C-A-v=. You can also paste with =C-v=
+     and then re-highlight the pasted text and hit =C-<space>= to
+     clear the formatting after the fact.

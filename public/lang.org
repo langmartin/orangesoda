@@ -7,9 +7,9 @@ I use Github to store repositories of most of my projects. My account
 there is http://github.com/langmartin.
 
 * Project Index
-  - [[file:emacs.org][Emacs]]: Code and notes.
-  - [[file:windows.org][Windows Cheat Sheet]]: I'm using Windows (XP) for the first time in
-    years, I'm collecting notes as I go.
-  - [[file:squash/index.org][Squash]]: a JavaScript library for manipulating SQL queries.
-  - [[file:jsmacs/index.org][JSMacs]]: an early-stage, slow-moving attempt to get emacs lisp and
-    emacs running in the browser.
+  - [[file:emacs.org][Emacs]] :: Code and notes.
+  - [[file:windows.org][Windows Cheat Sheet]] :: I'm using Windows (XP) for the first time
+       in years, I'm collecting notes as I go.
+  - [[file:squash/index.org][Squash]] :: a JavaScript library for manipulating SQL queries.
+  - [[file:jsmacs/index.org][JSMacs]] :: an early-stage, slow-moving attempt to get emacs lisp
+              and emacs running in the browser.
