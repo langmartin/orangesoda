@@ -13,3 +13,15 @@ there is http://github.com/langmartin.
   - [[file:squash/index.org][Squash]] :: a JavaScript library for manipulating SQL queries.
   - [[file:jsmacs/index.org][JSMacs]] :: an early-stage, slow-moving attempt to get emacs lisp
               and emacs running in the browser.
+
+* Ideas
+** Chrome plugin: tab key focuses form elements
+   http://github.com/decklin/yakshave/ is a comprehensive keyboard
+   capture plugin; I'd like to make the tab key focus only form
+   elements until you start searching for links.
+
+** Emacs interface to Chrome Dev Tools
+   [[http://code.google.com/p/chromedevtools/wiki/ChromeDevToolsProtocol][ChromeDevToolsProtocol]].
+
+** Emacs interface to Google contacts
+   I'd like to use the BBDB keys from Gnus against my Google contacts.
