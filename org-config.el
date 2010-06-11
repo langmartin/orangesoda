@@ -48,7 +48,9 @@
        :base-extension
        (concat
         "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"
-        "\\|ico\\|txt\\|ahk")))
+        "\\|ico\\|txt\\|ahk"
+        "\\|ics"
+        )))
 
 (defun org-orangesoda-make-alist ()
   (let* ((src-root (concat default-directory "public/"))
