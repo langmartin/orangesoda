@@ -1,7 +1,6 @@
+#+TITLE: World Cup Schedule America/New_York (UTC-5)
 #+STARTUP:content
-#+category:FIFA2010
-
-Note: all times are America/New_York (UTC-5)
+#+CATEGORY:FIFA2010
 
 * Group A								   :A:
 ** Uruguay        - France           <2010-06-11 Fri 13:30>
@@ -77,8 +76,7 @@ Note: all times are America/New_York (UTC-5)
 ** M6: 1F - 2E <2011-06-28 Tue 09:00>
 ** M8: 1H - 2G <2010-06-29 Tue 13:30>
 
-
-* Quarterfinals                                                           :QF:
+* Quarterfinals 							 :QF:
 ** QC: M5 - M7 <2010-07-02 Fri 09:00>
 ** QA: M1 - M3 <2010-07-02 Fri 13:30>
 ** QB: M2 - M4 <2010-07-02 Fri>
@@ -90,5 +88,6 @@ Note: all times are America/New_York (UTC-5)
 
 * Third place                                                            :3RD:
 ** Loser S1 - Loser S2  <2010-07-10 Sat 13:30>
+
 * Final                                                                :FINAL:
 ** Winner S1 - Winner S2 <2010-07-11 Sun 13:30>
