@@ -1,0 +1,94 @@
+#+STARTUP:content
+#+category:FIFA2010
+
+Note: all times are local (UTC+2)
+
+* Group A								   :A:
+** Uruguay        - France           <2010-06-11 Fri 20:30>
+** South Africa   - Mexico           <2010-06-11 Fri 16:00>
+** South Africa   - Uruguay          <2010-06-16 Wed 20:30>
+** France         - Mexico           <2010-06-17 Thu 20:30>
+** France         - South Africa     <2010-06-22 Tue 16:00>
+** Mexico         - Uruguay          <2010-06-22 Tue 16:00>
+
+* Group B								   :B:
+** Korea Republic - Greece           <2010-06-12 Sat 13:30>
+** Argentina      - Nigeria          <2010-06-12 Sat 16:00>
+** Argentina      - Korea Republic   <2010-06-17 Thu 13:30>
+** Greece         - Nigeria          <2010-06-17 Thu 16:00>
+** Greece         - Argentina        <2010-06-22 Tue 20:30>
+** Nigeria        - Korea Republic   <2010-06-22 Tue 20:30>
+
+* Group C								   :C:
+** England        - USA              <2010-06-12 Sat 20:30>
+** Algeria        - Slovenia         <2010-06-13 Sun 13:30>
+** Slovenia       - USA              <2010-06-18 Fri 16:00>
+** England        - Algeria          <2010-06-18 Fri 20:30>
+** Slovenia       - England          <2010-06-23 Wed 16:00>
+** USA            - Algeria          <2010-06-23 Wed 16:00>
+
+* Group D								   :D:
+** Serbia         - Ghana            <2010-06-13 Sun 16:00>
+** Germany        - Australia        <2010-06-13 Sun 20:30>
+** Germany        - Serbia           <2010-06-18 Fri 13:30>
+** Ghana          - Australia        <2010-06-19 Sat 16:00>
+** Australia      - Serbia           <2010-06-23 Wed 20:30>
+** Ghana          - Germany          <2010-06-23 Wed 20:30>
+
+* Group E								   :E:
+** Netherlands    - Denmark          <2010-06-14 Mon 13:30>
+** Japan          - Cameroon         <2010-06-14 Mon 16:00>
+** Netherlands    - Japan            <2010-06-19 Sat 13:30>
+** Cameroon       - Denmark          <2010-06-19 Sat 20:30>
+** Cameroon       - Netherlands      <2010-06-24 Thu 20:30>
+** Denmark        - Japan            <2010-06-24 Thu 20:30>
+
+* Group F								   :F:
+** Italy          - Paraguay         <2010-06-14 Mon 20:30>
+** New Zealand    - Slovakia         <2010-06-15 Tue 13:30>
+** Slovakia       - Paraguay         <2010-06-20 Sun 13:30>
+** Italy          - New Zealand      <2010-06-20 Sun 16:00>
+** Paraguay       - New Zealand      <2010-06-24 Thu 16:00>
+** Slovakia       - Italy            <2010-06-24 Thu 16:00>
+
+* Group G								   :G:
+** Côte d'Ivoire  - Portugal         <2010-06-15 Tue 16:00>
+** Brazil         - Korea DPR        <2010-06-15 Tue 20:30>
+** Brazil         - Côte d'Ivoire    <2010-06-20 Sun 20:30>
+** Portugal       - Korea DPR        <2010-06-21 Mon 13:30>
+** Korea DPR      - Côte d'Ivoire    <2010-06-25 Fri 16:00>
+** Portugal       - Brazil           <2010-06-25 Fri 16:00>
+
+* Group H								   :H:
+** Honduras       - Chile            <2010-06-16 Wed 13:30>
+** Spain          - Switzerland      <2010-06-16 Wed 16:00>
+** Chile          - Switzerland      <2010-06-21 Mon 16:00>
+** Spain          - Honduras         <2010-06-21 Mon 20:30>
+** Chile          - Spain            <2010-06-25 Fri 20:30>
+** Switzerland    - Honduras         <2010-06-25 Fri 20:30>
+
+* 8th Finals                                                              :8F:
+** M1: 1A - 2B <2010-06-26 Sat 16:00>
+** M3: 1C - 2D <2010-06-26 Sat 20:30>
+** M4: 1D - 2C <2010-06-27 Sun 16:00>
+** M2: 1B - 2A <2010-06-27 Sun 20:30>
+** M5: 1E - 2F <2011-06-27 Mon 16:00>
+** M7: 1G - 2H <2010-06-28 Mon 20:30>
+** M6: 1F - 2E <2011-06-28 Tue 16:00>
+** M8: 1H - 2G <2010-06-29 Tue 20:30>
+
+
+* Quarterfinals                                                           :QF:
+** QC: M5 - M7 <2010-07-02 Fri 16:00>
+** QA: M1 - M3 <2010-07-02 Fri 20:30>
+** QB: M2 - M4 <2010-07-03 Sat 16;00>
+** QD: M6 - M8 <2010-07-03 Sat 20:30>
+
+* Semifinals                                                              :SF:
+** S1: QA - QC <2010-07-06 Tue 20:30>
+** S2: QB - QD <2010-07-07 Wed 20:30>
+
+* Third place                                                            :3RD:
+** Loser S1 - Loser S2  <2010-07-10 Sat 20:30>
+* Final                                                                :FINAL:
+** Winner S1 - Winner S2 <2010-07-11 Sun 20:30>
