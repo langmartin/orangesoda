@@ -68,20 +68,18 @@
   =Disable Script Debugger= and =DisableScriptDebuggerIE=.
   =Friendly http errors=.
 
-* Install Flash Manually
-  1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
-  2. Rename to =.zip=
-  3. Copy =NPSWF32.dll= and =flashplayer.xpt= to =Mozilla Firefox\plugins= [fn:plugins]
-  4. Restart
-  5. http://www.mozilla.com/en-US/plugincheck/
-
-  [fn:plugins] Firefox plugins can be installed either in the global
-  directory or in your =Application Data= directory, although a
-  =plugins= sub-folder might not exist. IE plugins (on XP) seem to go
-  in =system32\Macromed\Flash=.
-
 * Keyboard Shortcuts
   1. Paste without Formatting :: In MS Office, you can "Paste Special"
      to remove formatting with =C-A-v=. You can also paste with =C-v=
      and then re-highlight the pasted text and hit =C-<space>= to
      clear the formatting after the fact.
+
+* Installation Notes
+** Emacs
+   Unzip emacs, install the GnuWin32 image libraries. Add the
+   libraries to the PATH for the system or user. In =emacs/bin=, run
+   =addpm.exe=.
+
+** GPG
+   Change the home directory of GnuPG by setting the environment
+   variable =GNUPGHOME=.
