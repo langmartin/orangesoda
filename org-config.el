@@ -99,3 +99,38 @@
 (defun org-orangesoda-publish (&optional force)
   (interactive "P")
   (org-publish (assoc "orangesoda" org-publish-project-alist) force))
+
+;;;; I was just playing with this, skip it for now.
+;; (progn
+;;   (require 'org-jekyll)
+;;   (setq org-publish-jk "f:/tmp/blog")
+;;   (setq org-publish-jk-blog (concat org-publish-jk "blog/"))
+;;   (add-to-list 'org-publish-project-alist
+;;                `("jk-org"
+;;                  :base-directory "public"
+;;                  :recursive t
+;;                  :base-extension "org"
+;;                  :publishing-directory ,org-publish-jk
+;;                  :blog-publishing-directory ,org-publish-jk-blog
+;;                  :site-root "http://juanreyero.com"
+;;                  :jekyll-sanitize-permalinks t
+;;                  :publishing-function org-publish-org-to-html
+;;                  :section-numbers nil
+;;                  :headline-levels 4
+;;                  :table-of-contents t
+;;                  :auto-index nil
+;;                  :auto-preamble nil
+;;                  :body-only t
+;;                  :auto-postamble nil))
+;;   (add-to-list 'org-publish-project-alist
+;;                `("jk-img"
+;;                  :base-directory "public"
+;;                  :recursive t
+;;                  :exclude "^publish"
+;;                  :base-extension "jpg\\|gif\\|png"
+;;                  :publishing-directory ,org-publish-jk
+;;                  :publishing-function org-publish-attachment))
+;;   (add-to-list 'org-publish-project-alist
+;;                '("jk" :components ("jk-org"
+;;                                    "jk-img")))
+;;   )
