@@ -4,8 +4,7 @@
 unless otherwise noted.
 
 * Recent Changes
-  - The [[file:world-cup-schedule.ics][World Cup Schedule]] in ICS format for the America/New\_York
-    timezone.
+  - [[http://github.com/weaver/sic][SIC]] a compiler for scheme, [2010-09-10 Fri].
   - [[./windows.org][Windows Cheat Sheet]] also moved to it's own file, [2010-03-31 Wed].
   - [[./emacs.org][Emacs]] moved to it's own file, [2010-03-31 Wed].
   - [[file:squash/index.org][Squash]] by [[file:lang.org][Lang]], [2010-03-11 Thu]. A new version, r2.
