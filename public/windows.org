@@ -83,3 +83,14 @@
 ** GPG
    Change the home directory of GnuPG by setting the environment
    variable =GNUPGHOME=.
+
+** Chrome
+   Download specific versions of chrome: [[http://dl.google.com/chrome/install/472.59/chrome_installer.exe][Chrome 6.0.472.59]]. This is
+   really only useful with Chrome Portable; for portable you need to
+   unpack the installer with 7-zip rather than running it. The
+   Chrome-bin directory just goes in the portable app.
+
+   As of [2010-09-15 Wed], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
+
+   | Stable/Beta | [[http://dl.google.com/chrome/install/472.59/chrome_installer.exe][Chrome 6.0.472.59]] |
+   | Dev         | [[http://dl.google.com/chrome/install/517.5/chrome_installer.exe][Chrome 7.0.517.5]]  |
