@@ -90,7 +90,8 @@
    unpack the installer with 7-zip rather than running it. The
    Chrome-bin directory just goes in the portable app.
 
-   As of [2010-09-15 Wed], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
+   As of [2010-10-20 Wed], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
 
-   | Stable/Beta | [[http://dl.google.com/chrome/install/472.59/chrome_installer.exe][Chrome 6.0.472.59]] |
-   | Dev         | [[http://dl.google.com/chrome/install/517.5/chrome_installer.exe][Chrome 7.0.517.5]]  |
+   | Stable | [[http://dl.google.com/chrome/install/517.41/chrome_installer.exe][Chrome 7.0.517.41]] |
+   | Beta   | [[http://dl.google.com/chrome/install/517.41/chrome_installer.exe][Chrome 7.0.517.41]] |
+   | Dev    | [[http://dl.google.com/chrome/install/552.5/chrome_installer.exe][Chrome 8.0.552.5]]  |
