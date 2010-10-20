@@ -82,9 +82,9 @@
                                   src-root
                                   org-orangesoda-publish-directory
                                   (append
-                                   (list :auto-index t
-                                         :index-filename "sitemap.org"
-                                         :index-title "Orangesoda Sitemap")
+                                   (list :auto-sitemap t
+                                         :sitemap-filename "sitemap.org"
+                                         :sitemap-title "Orangesoda Sitemap")
                                    module)
                                   nil))
                 org-orangesoda-module-list)
