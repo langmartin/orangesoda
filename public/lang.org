@@ -51,6 +51,10 @@ there is http://github.com/langmartin.
       2. [[http://maps.google.com/maps?f%3Dd&source%3Ds_d&saddr%3DChattanooga,%2BTN&daddr%3DDucktown,%2BTN%2Bto:Tellico%2BPlains,%2BTN&hl%3Den&geocode%3DFf7AFgIdEEfq-imF54OKQGBgiDGqKIeJHyZxJA%3BFQmbFgIdE2z4-imv6LFOV6xfiDEH3yfc2_Aijw%3BFSeYGwIdOcb5-imrm7vXm95biDFiX13D2XjmPA&mra%3Dls&sll%3D35.240768,-84.318622&sspn%3D0.23666,0.308647&ie%3DUTF8&ll%3D35.187278,-84.793854&spn%3D0.942772,1.234589&z%3D10][North (Half a Dozen)]]
       3. [[http://maps.google.com/maps?f%3Dd&source%3Ds_d&saddr%3DSt%2BElmo%2BAve,%2BChattanooga,%2BTN&daddr%3D193%2Band%2B136%2Bto:LaFayette,%2BGA%2Bto:Ellijay,%2BGA%2Bto:Tellico%2BPlains,%2BTN&hl%3Den&geocode%3DFZEBFgIdBfnp-imfZh_nXlxgiDGYBZTwDn11xw%3BFWceEwId4A_p-ilpqSlsD0dgiDEGZEkCtM3MNQ%3BFaKNEQIdlLPq-invT_jAJD5giDH5iT8OqDeS-g%3BFZhmEQIdmuf2-iknBnpR-ZZfiDGP_9xpvGisDQ%3BFSeYGwIdOcb5-imrm7vXm95biDFiX13D2XjmPA&mra%3Dls&dirflg%3Dh&sll%3D34.830432,-85.266609&sspn%3D0.236725,0.308647&ie%3DUTF8&ll%3D34.920845,-84.788361&spn%3D0.945852,1.234589&z%3D10][via Ellijay]]
 
+      So it turns out that this is where "the tail of the dragon" is,
+      more or less. Check out the (just coined) [[http://goo.gl/maps/Zsra][Triple Bypass]]. Leg #2
+      is the dragon.
+
    3. [[http://maps.google.com/maps?f%3Dd&saddr%3DCrossville,%2BTN&daddr%3DPall%2BMall,%2BTN%2Bto:Forbus,%2BTN%2Bto:Byrdstown,%2BTN%2Bto:Livingston,%2BTN%2Bto:Monterey,%2BTN&hl%3Den&geocode%3DFTmeJAIdA2ru-g%3B%3B%3B%3B%3B&mra%3Dls&sll%3D36.288563,-85.124817&sspn%3D0.909884,2.230225&ie%3DUTF8&ll%3D36.292991,-85.087738&spn%3D0.830152,0.666046&t%3Dh&z%3D10][North Central TN Tour, 127]]
       [[http://www.motorcycleroads.com/routes/SouthEast/TN/TN_27.shtml][Description]]
    4. [[http://www.motorcycleroads.com/routes/SouthEast/TN/TN_19.shtml][Gatlinburg & Sevierville, Etc.]]
