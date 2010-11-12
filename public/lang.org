@@ -38,7 +38,7 @@ there is http://github.com/langmartin.
    Ranked, ish. All near Chattanooga, TN.
    1. [[http://goo.gl/maps/pKxo][Signal Mountain and Jasper, TN]]
    2. [[http://goo.gl/maps/vcyl][Signal Mountain and the Tennessee riverfront]]
-   3. [[http://goo.gl/maps/EPDX][North GA/Chickamauga Battlefield]]
+   3. [[http://goo.gl/maps/EPDX][North GA/Chickamauga Battlefield]] (maybe try [[http://goo.gl/maps/WOAu][via Summerville]]).
    4. [[http://goo.gl/maps/xuMW][Lookout Mountain]] (haven't yet been to the [[http://goo.gl/maps/6Iem][the end]])
 
 ** Trips I'd like to try
@@ -49,7 +49,6 @@ there is http://github.com/langmartin.
 
       1. [[http://goo.gl/maps/8pqO][North (Six)]]
       2. [[http://goo.gl/maps/u84h][North (Half a Dozen)]]
-      3. [[http://goo.gl/maps/XTrc][via Ellijay]]
 
       So it turns out that this is where "the tail of the dragon" is,
       more or less. Check out the (just coined) [[http://goo.gl/maps/Zsra][Triple Bypass]]. Leg #2
