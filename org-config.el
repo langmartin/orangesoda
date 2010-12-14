@@ -24,7 +24,7 @@
       '("squash" "jsmacs"))
 
 (setq org-orangesoda-static-list
-      '("css" "js" "scheme" "javascript" "emacs-lisp" "windows"))
+      '("css" "lang" "js" "scheme" "javascript" "emacs-lisp" "windows"))
 
 (setq org-orangesoda-module-options
       (list
@@ -48,7 +48,7 @@
        :base-extension
        (concat
         "js\\|el\\|scm\\|html\\|css\\|png\\|jpg\\|gif"
-        "\\|ico\\|txt\\|ahk"
+        "\\|ico\\|txt\\|ahk\\|asc"
         "\\|ics"
         )))
 
