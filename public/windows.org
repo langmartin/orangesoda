@@ -33,7 +33,8 @@
 
 * Fonts
   - [[http://www.microsoft.com/downloads/details.aspx?familyid=22e69ae4-7e40-4807-8a86-b3d36fab68d3&displaylang=en][Consolas]] :: Nice monospace font if ClearType is on.
-  - [[http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=DoulosSILfont][DoulosSIL]] :: missing unicode glyphs.
+  - [[http://dejavu-fonts.org/wiki/Main_Page][Deja Vu]] :: Missing unicode characters.
+  - [[http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=DoulosSILfont][DoulosSIL]] :: Alternate unicode.
 
 * IE Debugging
   =HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main=,
