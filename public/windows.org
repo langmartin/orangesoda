@@ -48,9 +48,9 @@
 
    As of [2010-11-12 Fri], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
 
-   | Stable | [[http://dl.google.com/chrome/install/552.215/chrome_installer.exe][Chrome 8.0.552.215]]  |
-   | Beta   | [[http://dl.google.com/chrome/install/552.215/chrome_installer.exe][Chrome 8.0.552.215]] |
-   | Dev    | [[http://dl.google.com/chrome/install/597.0/chrome_installer.exe][Chrome 9.0.597.0]]   |
+   | Stable | [[http://dl.google.com/chrome/install/552.231/chrome_installer.exe][Chrome 8.0.552.231]] |
+   | Beta   | [[http://dl.google.com/chrome/install/597.19/chrome_installer.exe][Chrome 9.0.597.19]]  |
+   | Dev    | [[http://dl.google.com/chrome/install/597.19/chrome_installer.exe][Chrome 9.0.597.19]]  |
 
 ** Emacs
    Unzip emacs, install the GnuWin32 image libraries. Add the
