@@ -46,11 +46,11 @@
    For Chrome Portable, download specific versions of chrome and
    unpack them (7-zip). Move Chrome-bin to the portable app directory.
 
-   As of [2010-11-12 Fri], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
+   As of [2010-12-29 Wed], via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
 
-   | Stable | [[http://dl.google.com/chrome/install/552.231/chrome_installer.exe][Chrome 8.0.552.231]] |
+   | Dev    | [[http://dl.google.com/chrome/install/612.3/chrome_installer.exe][Chrome 10.0.612.3]]  |
    | Beta   | [[http://dl.google.com/chrome/install/597.19/chrome_installer.exe][Chrome 9.0.597.19]]  |
-   | Dev    | [[http://dl.google.com/chrome/install/597.19/chrome_installer.exe][Chrome 9.0.597.19]]  |
+   | Stable | [[http://dl.google.com/chrome/install/552.231/chrome_installer.exe][Chrome 8.0.552.231]] |
 
 ** Emacs
    Unzip emacs, install the GnuWin32 image libraries. Add the
