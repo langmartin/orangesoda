@@ -48,7 +48,7 @@
 
    Via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
 
-   | Dev    | [[http://dl.google.com/chrome/install/648.11/chrome_installer.exe][Chrome 10.0.648.11]] | [2011-02-01 Tue] |
+   | Dev    | [[http://dl.google.com/chrome/install/648.45/chrome_installer.exe][Chrome 10.0.648.45]] | [2011-02-08 Tue] |
    | Beta   | [[http://dl.google.com/chrome/install/597.67/chrome_installer.exe][Chrome 9.0.597.67]]  | [2011-01-19 Wed] |
    | Stable | [[http://dl.google.com/chrome/install/552.334/chrome_installer.exe][Chrome 8.0.552.334]] | [2011-01-19 Wed] |
 
@@ -76,6 +76,18 @@
    - =network.cookie.lifetime.days= :: expire all cookies in...
    - =network.cookie.lifetimePolicy= :: 3 to honor lifetime.days.
 
+** Flash
+   1. http://fpdownload.macromedia.com/get/flashplayer/xpi/current/flashplayer-win.xpi
+   2. Rename to =.zip=
+   3. Copy =NPSWF32.dll= and =flashplayer.xpt= to =Mozilla Firefox\plugins= [fn:plugins]
+   4. Restart
+   5. http://www.mozilla.com/en-US/plugincheck/
+
+   [fn:plugins] Firefox plugins can be installed either in the global
+   directory or in your =Application Data= directory, although a
+   =plugins= sub-folder might not exist. IE plugins (on XP) seem to go
+   in =system32\Macromed\Flash=.
+
 ** GPG
    Change the home directory of GnuPG by setting the environment
    variable =GNUPGHOME=.
@@ -91,3 +103,11 @@
 
 ** Disable XP System Balloon Windows
    http://support.microsoft.com/kb/307729
+
+** Outlook
+*** Quoting Sanely
+    1) Tools -> Options -> Email Options -> "Prefix each line of the
+       original message". Uncheck "Remove extra line breaks in plain
+       text messages".
+    2) Tools -> Trust Center -> Email Security -> "Read all standard
+       mail in plain text".
