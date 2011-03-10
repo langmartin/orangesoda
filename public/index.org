@@ -4,6 +4,7 @@
 unless otherwise noted.
 
 * Recent Changes
+  - [[file:lang/htmljs.org][HTML/JS]] notes created by [[file:lang.org][Lang]] [2011-03-10 Thu].
   - [[http://github.com/weaver/sic][SIC]] a compiler for scheme, [2010-09-10 Fri].
   - [[./windows.org][Windows Cheat Sheet]] also moved to it's own file, [2010-03-31 Wed].
   - [[./emacs.org][Emacs]] moved to it's own file, [2010-03-31 Wed].
