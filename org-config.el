@@ -21,7 +21,7 @@
     (setq org-orangesoda-publish-directory "/orangesoda:/home/public/"))
 
 (setq org-orangesoda-module-list
-      '("squash" "jsmacs"))
+      '("lang" "jsmacs" "squash"))
 
 (setq org-orangesoda-static-list
       '("css" "lang" "js" "scheme" "javascript" "emacs-lisp" "windows"))

@@ -1,5 +1,4 @@
 #+TITLE: Lang Martin/HTML & JS
-[[file:~/code/orangesoda/public/index.org][index]] : [[file:lang.org][lang]]
 
 * Links
   - [[http://developer.yahoo.com/yui/grids/][YUI grids CSS]]

@@ -1,5 +1,4 @@
 #+TITLE: Lang Martin
-[[file:index.org][index]]
 
 Email lang.martin at Gmail. My [[file:lang/lang-martin.asc][public key]]. Most of my email is signed,
 but only when I send it from Emacs.
