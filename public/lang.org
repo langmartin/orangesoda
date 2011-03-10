@@ -1,5 +1,5 @@
 #+TITLE: Lang Martin
-[[./index.org][Home]]
+[[file:index.org][index]]
 
 Email lang.martin at Gmail. My [[file:lang/lang-martin.asc][public key]]. Most of my email is signed,
 but only when I send it from Emacs.
@@ -9,6 +9,7 @@ there is http://github.com/langmartin.
 
 * Project Index
   - [[file:emacs.org][Emacs]] :: Code and notes.
+  - [[file:lang/htmljs.org][HTML/JS]] :: Code and notes.
   - [[file:windows.org][Windows Cheat Sheet]] :: I'm using Windows (XP) for the first time
        in years, I'm collecting notes as I go.
   - [[file:squash/index.org][Squash]] :: a JavaScript library for manipulating SQL queries.

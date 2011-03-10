@@ -1,0 +1,16 @@
+#+TITLE: Lang Martin/HTML & JS
+[[file:~/code/orangesoda/public/index.org][index]] : [[file:lang.org][lang]]
+
+* Links
+  - [[http://developer.yahoo.com/yui/grids/][YUI grids CSS]]
+  - [[http://scriptsrc.net/][links to hosted jQuery and so forth]]
+  - [[http://www.topdesignmag.com/all-the-cheat-sheets-that-a-web-developer-needs/][cheat sheet collection]]
+  - [[https://github.com/sorccu/cufon/wiki/About][cufon SVG/VML font engine (vs. SIFR)]]
+  - [[http://html5boilerplate.com/][HTML5 boilerplate]]
+  - [[http://camendesign.com/code/video_for_everybody][HTML5 video with fallback]]
+
+* JSON (P)
+  - [[http://ajaxian.com/archives/dynamic-script-generation-and-memory-leaks][script tag generation and memory leaks]]
+
+* IE Hacks
+  - [[http://dillerdesign.com/experiment/DD_roundies/][VML generated round corners a la border-radius for IE6-8]]
