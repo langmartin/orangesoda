@@ -7,6 +7,7 @@
   - [[https://github.com/sorccu/cufon/wiki/About][cufon SVG/VML font engine (vs. SIFR)]]
   - [[http://html5boilerplate.com/][HTML5 boilerplate]]
   - [[http://camendesign.com/code/video_for_everybody][HTML5 video with fallback]]
+  - [[http://westciv.com/tools/gradients/index.html][-webkit/-moz gradient slider tool]]
 
 * JSON (P)
   - [[http://ajaxian.com/archives/dynamic-script-generation-and-memory-leaks][script tag generation and memory leaks]]
