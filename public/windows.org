@@ -48,7 +48,7 @@
    Via [[http://googlechromereleases.blogspot.com/][the Chrome release blog]]:
 
    | Dev    | [[http://dl.google.com/chrome/install/648.45/chrome_installer.exe][Chrome 10.0.648.45]] | [2011-02-08 Tue] |
-   | Beta   | [[http://dl.google.com/chrome/install/696.16/chrome_installer.exe][Chrome 11.0.696.16]] | [2011-03-23 Wed] |
+   | Beta   | [[http://dl.google.com/chrome/install/742.30/chrome_installer.exe][Chrome 12.0.742.30]] | [2011-05-11 Wed] |
    | Stable | [[http://dl.google.com/chrome/install/552.334/chrome_installer.exe][Chrome 8.0.552.334]] | [2011-01-19 Wed] |
 
 ** Emacs
