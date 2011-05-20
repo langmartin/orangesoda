@@ -1,0 +1,29 @@
+#+TITLE:     Coping
+#+AUTHOR:    Lang Martin
+#+EMAIL:     lang.martin@gmail.com
+#+DATE:      2011-06-04 Sat
+
+Notes for a presentation for DevChat in Chattanooga, TN.
+
+* Bad Code
+  I've been working for a larger company for the last year or so, and
+  this presentation is a collection of my ideas for dealing with bad
+  code.
+
+** Denial
+** Anger
+** Bargaining
+** Depression
+** Acceptance
+
+* Libraries
+
+* Leaky Abstractions
+
+* Languages
+
+* Good Code
+
+** Qmail
+** Emacs
+** Firefox
