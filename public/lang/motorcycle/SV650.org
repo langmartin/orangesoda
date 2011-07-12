@@ -1,0 +1,82 @@
+I've got a 2005 SV650 Standard (the naked one). It's rad. I'm new to
+motorcycle maintenance, these are my notes.
+
+* Maintenance Log
+  I'm writing the initial outline here on [2011-07-12 Tue], so the
+  historical stuff is a bit fuzzy.
+
+  1) Purchase [2010-10-16 Sat].
+     Now that I'm a good chunk into owning the bike, I can admit that
+     my cousin was right; the accessories that it's missing (like the
+     back seat) are stupidly expensive. I would have been better off
+     picking up one of the other options that already had the rear
+     seat and heated grips and stuff without the pretty orange stripe.
+     But the stripe *is* pretty, so I picked this one. My next bike
+     will be uglier, I promise. It's a fantastic ride.
+
+  2) Oil Change. [2010-11-20 Sat] (?).
+     Followed directions from bolty.net: [[http://bolty.net/2009/04/15/how-to-change-the-oil-in-your-sv650/][How to change the oil in your sv650]].
+     My drain plug didn't have a crush washer washer; it was sealed
+     with a regular flat one. I tried to use a crush washer and it
+     leaked. I put the flat one back on, and it's been fine (through
+     another change and ~8k miles).
+
+  3) Chain & Sprockets replaced by Pandora's [2010-12-04 Sat] (?).
+     Turns out I wasn't lubricating my chain frequently enough.
+     Neither did the previous owner. They recommend chain wax, applied
+     after wiping down the chain with rag every 300 miles. I've
+     actually switched to using 90 weight gear oil to lubricate the
+     chain, recommended by some folks on rideit.
+
+  4) Heated grip installation debacle by Pandora's [2011-01-15 Sat] (?).
+     Should have manned up and wrenched it, but I was intimidated.
+     Stupidly expensive, and the grips are shit (Dual Stars). They
+     literally don't work at all, which I don't think is Pandora's
+     fault. I really regret paying for this installation.
+
+     The front fork was a bit cockeyed, presumably from the time the
+     previous owner crashed it. He described the fall as a low-speed
+     drop, but probably ran into something in real life. It's not too
+     bad, but did require loosening the clamps and twisting the front
+     end straight. It's actually not quite perfect still, I'm going to
+     straighten it out some more. I consider it additional motivation
+     to upgrade the front suspension sometime.
+
+  5) Radiator flush by Pandora's [2011-03-11 Fri].
+     Prep for my first track day!
+
+  6) Oil change [2011-03-12 Sat] 20,500.
+
+  7) Hack job clutch handle replacement [2011-03-13 Sun].
+     Kickstand down THEN get off the bike. Since the clutch cable was
+     broken on the GZ anyway, Ty came over and helped me cannibalize
+     it's clutch lever. It was kind of close to fitting, and he busted
+     out the angle grinder to get it to fit the rest of the way. I had
+     a gear lever already since I have, by this point in the story,
+     dropped the SV at a stop twice. That clutch handle is still on
+     there as of July.
+
+     If you're watching the dates, you'll notice that this is also
+     prep for the track day, and a botch job because I needed it
+     running the next day.
+
+  8) Front brake fluid change [2011-07-09 Sat].
+     Directions from bluepoof: [[http://www.bluepoof.com/motorcycles/howto/svs_bleeding_brakes/][SV650 bleeding brakes]]. As an aside, I
+     really like the directions on this site, she explains everything
+     clearly. One note, the master cyclinder has a three part lid: the
+     metal cover, a plastic cover inside with a rubber seal, and a
+     black rubber expandible flexy thing. The flexy thing goes on top
+     of the fluid apparently is there to allow the fluid to go down
+     without drawing air in. I spent an embarrassing amount of time
+     pouring brake fluid on top of that thing and wondering why it
+     wouldn't go through the lines.
+
+     The brakes don't feel all that great, I think I probably didn't
+     get all the air out of the system. Found [[http://www.motorcycleaddicts.org/content/86-brake-bleeding-101.html][brake bleeding 101]] today
+     in the rideit archives, so I'm going to take another crack at it.
+     I'll do the rear brakes when I'm more confident that the front
+     ones are correct.
+
+* Gear
+  I've got a motoport air mesh kevlar jacket and the pants are out for
+  delivery today! More on that later.
