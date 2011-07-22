@@ -1,5 +1,7 @@
-I've got a 2005 SV650 Standard (the naked one). It's rad. I'm new to
-motorcycle maintenance, these are my notes.
+#+TITLE: SV650
+
+by [[file:~/code/orangesoda/public/lang.org][Lang]]. I've got a 2005 SV650 Standard (the naked one). It's rad. I'm
+new to motorcycle maintenance, these are my notes.
 
 * Maintenance Log
   I'm writing the initial outline here on [2011-07-12 Tue], so the

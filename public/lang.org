@@ -35,6 +35,8 @@ there is http://github.com/langmartin.
   scooter, talk to me instead. The SV is better in the
   mountains[fn:1].
 
+  I'm adding a new section on [[file:motorcycle/SV650.org][maintenance]].
+
 ** Short Rides
    1. [[http://goo.gl/maps/pKxo][Signal Mountain and Jasper, TN]]
    2. [[http://goo.gl/maps/vcyl][Signal Mountain and the Tennessee riverfront]]
