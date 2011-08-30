@@ -1,0 +1,26 @@
+#+TITLE:     OS X
+#+AUTHOR:    Lang Martin
+#+EMAIL:     lang.martin@gmail.com
+
+* Xcode 4 under 10.7 Lion
+** Xcode Crashes on Project Open
+   Delete preferences com.apple.Xcode*, com.apple.dt.Xcode*
+   Delete all caches under ~/Library/Caches
+   Reboot
+   Not necessary to reinstall Xcode
+
+** Completely Uninstall Xcode
+   =sudo /Developer/Library/uninstall-devtools --mode=all=
+
+* COMMENT org-mode
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
