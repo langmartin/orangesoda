@@ -1,7 +1,8 @@
 #+TITLE: Lang Martin
 
 Email lang.martin at Gmail. My [[file:lang/lang-martin.asc][public key]]. Most of my email is signed,
-but only when I send it from Emacs.
+but only when I send it from Emacs. I have recently revoked my
+[[file:lang/revoked-lang.asc][previous key]].
 
 I use Github to store repositories of most of my projects. My account
 there is http://github.com/langmartin.
