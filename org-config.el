@@ -24,7 +24,7 @@
       '("lang" "jsmacs" "squash" "motorcycle"))
 
 (setq org-orangesoda-static-list
-      '("css" "lang" "js" "scheme" "javascript" "emacs-lisp" "windows"))
+      '("css" "lang" "js" "scheme" "javascript" "windows"))
 
 (setq org-orangesoda-module-options
       (list
