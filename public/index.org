@@ -4,6 +4,7 @@
 unless otherwise noted.
 
 * Recent Changes
+  - A [[file:lang/lang-martin-2012-08-26.asc][new email key]] by [[file:lang.org][Lang]] [2012-08-26 Sun].
   - [[file:lang/htmljs.org][HTML/JS]] notes created by [[file:lang.org][Lang]] [2011-03-10 Thu].
   - [[http://github.com/weaver/sic][SIC]] a compiler for scheme, [2010-09-10 Fri].
   - [[./windows.org][Windows Cheat Sheet]] also moved to it's own file, [2010-03-31 Wed].
@@ -82,5 +83,3 @@ Source: [[http://github.com/weaver/gambit-prelude/blob/master/require%23.scm][re
   Wibler email & apps are hosted by Google:
   - [[http://mail.google.com/a/wibler.com/][email]]
   - [[http://www.google.com/calendar/a/wibler.com/][calendar]]
-
-
