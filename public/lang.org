@@ -51,12 +51,20 @@ there is http://github.com/langmartin.
       summer.
    3. [[http://goo.gl/maps/Wfz3][Chattanooga to Destin, FL ALT]]
 
+From Hazard, KY-15N 13.0, Right KY-205N (191) get on Pkwy East 20.1,
+KY-40 14.0 miles to US-25 N. Signs for Yatesville Lake campground.
+
 ** Rides I Haven't Done Yet
    1. [[http://goo.gl/maps/kMXO][Cousin Ben's Hunting Spot]]
    2. Route to [[http://goo.gl/maps/u84h][Tellico Plains]]
    3. [[http://maps.google.com/maps?f%3Dd&saddr%3DCrossville,%2BTN&daddr%3DPall%2BMall,%2BTN%2Bto:Forbus,%2BTN%2Bto:Byrdstown,%2BTN%2Bto:Livingston,%2BTN%2Bto:Monterey,%2BTN&hl%3Den&geocode%3DFTmeJAIdA2ru-g%3B%3B%3B%3B%3B&mra%3Dls&sll%3D36.288563,-85.124817&sspn%3D0.909884,2.230225&ie%3DUTF8&ll%3D36.292991,-85.087738&spn%3D0.830152,0.666046&t%3Dh&z%3D10][North Central TN Tour, 127]]
       [[http://www.motorcycleroads.com/routes/SouthEast/TN/TN_27.shtml][Description]]
    4. [[http://www.motorcycleroads.com/routes/SouthEast/TN/TN_19.shtml][Gatlinburg & Sevierville, Etc.]]
+
+** Trip Planning
+
+1. Road to WV [[https://maps.google.com/maps?saddr=Chattanooga,+TN&daddr=us-64+and+tn-30+to:Tellico+Plains,+TN+to:129+N+Carolina+28,+Robbinsville,+North+Carolina+28771+to:Gatlinburg,+TN+to:Johnson+City,+TN+to:Pulaski,+VA&hl=en&ll=35.481361,-83.051147&spn=0.689413,1.496201&sll=35.659528,-83.83255&sspn=1.375747,2.992401&geocode=Ff7AFgIdEEfq-imF54OKQGBgiDGqKIeJHyZxJA%3BFeHIFwIdzm31-iljZKk0wkpeiDFdjGMsO_SSPQ%3BFSeYGwIdOcb5-iklCRTxzvVeiDFiX13D2XjmPA%3BFRrYGwIdca4C-ymZXHnSycleiDFYkrnnr2QdRg%3BFdP0IAIdbLwF-ymJpQjL6lNZiDGoebd-rtexSg%3BFWAZKgIdv2IX-ylbo0FR23xaiDHLYwV8DCrmPA%3BFVpONQId7mUv-ykpn8NJUvxNiDEDcEMo_6VtlA&oq=pulas&mra=ls&t=m&z=11][#1]]
+2. Road to WV [[https://maps.google.com/maps?saddr=Chattanooga,+TN&daddr=us-64+and+tn-30+to:Tellico+Plains,+TN+to:Whittier,+NC+to:Pulaski,+VA&hl=en&sll=35.241531,-84.333545&sspn=1.382918,2.992401&geocode=Ff7AFgIdEEfq-imF54OKQGBgiDGqKIeJHyZxJA%3BFeHIFwIdzm31-iljZKk0wkpeiDFdjGMsO_SSPQ%3BFSeYGwIdOcb5-iklCRTxzvVeiDFiX13D2XjmPA%3BFVqyHAIdZgYI-ylz8PH95kZZiDE4UF6YcLko3g%3BFVpONQId7mUv-ykpn8NJUvxNiDEDcEMo_6VtlA&oq=pulas&dirflg=h&mra=ls&t=m&z=9][#2]]
 
 * Footnotes
 
